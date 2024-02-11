@@ -7,3 +7,6 @@ End: Pressing the End key will switch you to a single session, and
 Del: Pressing the Delete key will immediately exit the game.
 Alt: while useing alt to instant stop will auto ESC
 num Key: close the weapon menu immediately
+
+How to make it a EXE:
+use terminal to open the path of this project and use the commend in execute.txt to make it a exe
