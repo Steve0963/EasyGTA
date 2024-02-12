@@ -1,7 +1,7 @@
 from pygetwindow import getActiveWindow
 from pynput import keyboard, mouse
 from Memory import read_memory,address_by_offsets,get_process_id_by_name
-from  ctypes import c_ulong,c_float
+from  ctypes import c_ulong,c_float,c_ubyte
 
 from time import sleep
 from  sys import argv,executable
@@ -11,8 +11,7 @@ import Offsets
 import Initial as ini
 controller = keyboard.Controller()
 mouse_controller=mouse.Controller()
-def vk(key):
-    return key+48
+
 
 def is_in_game():#是否在游戏内
     if getActiveWindow()!=None:
@@ -40,7 +39,8 @@ def is_pause():
 
 def is_snakcs_none():
     return ini.SNACKS==0
-
+def is_texting():
+    return read_memory(address_by_offsets(Offsets.IS_TEXTING),c_ubyte)==1
 def crt_health():#当前血量
     return read_memory(address_by_offsets(Offsets.CURRENT_HEALTH),c_float)
 

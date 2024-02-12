@@ -5,7 +5,9 @@ from  threading import Thread,Timer
 import GameFunction as GF
 import Initial as ini
 from KeyBindings import Weapons
-from Utils import vk,is_pause,is_in_car
+def vk(key):
+    return key+48
+
 def on_click(x, y, button, pressed):
     if is_in_game():
         if pressed:
@@ -17,21 +19,15 @@ def on_click(x, y, button, pressed):
                 Thread(target=GF.tab_run).start()
 
             if button==Button.left:
-                if  is_in_car():
-                    pass
-                else:
-                    ini.LEFT_PRESSED=True
-                    Thread(target=GF.reload_while_down).start() 
+                ini.LEFT_PRESSED=True
+                Thread(target=GF.reload_while_down).start() 
         else:
             if button==Button.x2:
                 ini.X2_PRESSED=False
 
             if button==Button.left:
                 ini.LEFT_PRESSED=False
-                if is_in_car():
-                    pass
-                else:
-                    GF.reload_while_up()  
+                GF.reload_while_up()  
             
                 
 def on_scroll(x, y, dx, dy):
@@ -67,15 +63,9 @@ def on_press(key):
             if key==Key.f11:
                 GF.idle()
             if key== Key.space:
-                if is_in_car():
-                    pass
-                else:
-                    GF.jump()
+                GF.jump()
             if key==Key.tab:
-                if is_in_car():
-                    pass
-                else:
-                    GF.heal()
+                GF.heal()
             if key==Key.end:
                 GF.suspend_game()
             if key==Key.page_down:

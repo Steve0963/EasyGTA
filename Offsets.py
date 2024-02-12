@@ -22,5 +22,7 @@ CURRENT_WEAPON_AMMO=[0x1D701B0] #ctypes.c_ulong
 IS_IN_FACLITY=[0x200E130] #ctypes.c_ulong
 #是否在线
 IS_ONLINE=[0x1D89E48] #ctypes.c_ulong
-
+#是否p暂停
 IS_PAUSE=[0x1FFB758] #ctypes.c_ulong
+#是否在打字
+IS_TEXTING=[0x2D382A6]#ctypes.c_ulong

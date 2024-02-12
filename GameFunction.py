@@ -34,7 +34,7 @@ def releaseC():
         press(KeyBindings.LOOK_BACK)
 
 def heal():
-    if not Utils.is_snakcs_none():
+    if not Utils.is_snakcs_none() and not Utils.is_in_car():
         cnt=0
         press(KeyBindings.WEAPON_LIST)
         sleep(0.15)
@@ -58,10 +58,11 @@ def tab():
     press_and_release(KeyBindings.WEAPON_LIST)
 
 def jump():
-    press_and_release(KeyBindings.JUMP)
+    if not Utils.is_in_car():
+        press_and_release(KeyBindings.JUMP)
 
 def reload_while_down():
-    if not Utils.is_pause():
+    if not Utils.is_pause() and not Utils.is_in_car():
         while ini.LEFT_PRESSED:
             if Utils.is_need_reload() and Utils.crt_weapon_ammo()!=0:
                 #weapon=trans_weapon()
@@ -95,7 +96,7 @@ def reload_while_down():
     
 
 def reload_while_up():
-     if Utils.is_need_reload():
+     if not Utils.is_pause() and not Utils.is_in_car():
         if trans_weapon()==KeyBindings.Weapons.SNIPER :
             quick_last_weapon()
     
@@ -227,21 +228,22 @@ def suspend_game():
 
 
 def set_visual():
-    addresses=[Memory.address_by_offsets(Offset) for Offset in Offsets.VISUAL]
-    if Utils.is_in_car():
+    if not Utils.is_texting() and not Utils.is_pause():
+        addresses=[Memory.address_by_offsets(Offset) for Offset in Offsets.VISUAL]
+        if Utils.is_in_car():
 
-        if Utils.is_first_person(addresses[1]):
-            for address in addresses[1:]:
-                Memory.write_memory(address,"i",ini.THIRD_PERSON)
+            if Utils.is_first_person(addresses[1]):
+                for address in addresses[1:]:
+                    Memory.write_memory(address,"i",ini.THIRD_PERSON)
 
-        else:
-            for address in addresses[1:]:
-                Memory.write_memory(address,"i",ini.FIRST_PERSON)
-
-    else:
-
-        if Utils.is_first_person(addresses[0]):
-            Memory.write_memory(addresses[0],"i",ini.THIRD_PERSON)
+            else:
+                for address in addresses[1:]:
+                    Memory.write_memory(address,"i",ini.FIRST_PERSON)
 
         else:
-            Memory.write_memory(addresses[0],"i",ini.FIRST_PERSON)
+
+            if Utils.is_first_person(addresses[0]):
+                Memory.write_memory(addresses[0],"i",ini.THIRD_PERSON)
+
+            else:
+                Memory.write_memory(addresses[0],"i",ini.FIRST_PERSON)
