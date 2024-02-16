@@ -5,6 +5,7 @@ from  threading import Thread,Timer
 import GameFunction as GF
 import Initial as ini
 from KeyBindings import Weapons
+import KeyBindings
 def vk(key):
     return key+48
 
@@ -12,7 +13,7 @@ def on_click(x, y, button, pressed):
     if is_in_game():
         if pressed:
             if button==Button.x1:
-                GF.melee_hand() 
+                Thread(target=GF.melee_hand).start()
 
             if button==Button.x2:
                 ini.X2_PRESSED=True
@@ -49,25 +50,26 @@ def on_press(key):
                 ini.SNACKS=1
 
         except:
-            if key==Key.f3:
+            if key==KeyBindings.AMMO:
                GF.buy_ammo()
-            if key==Key.f4:
+            if key==KeyBindings.NECKLACE:
                GF.wear_necklace()
-            if key==Key.f5:
+            if key==KeyBindings.START_EGINE:
                 GF.start_egine()
-            if key ==Key.f6:
+            if key ==KeyBindings.SNACKS:
                 GF.snack_on_car()
-            if key ==Key.f7:
+            if key ==KeyBindings.SESSION:
                 #GF.change_session()
                 pass
-            if key==Key.f11:
+            if key==KeyBindings.IDLE:
                 GF.idle()
             if key== Key.space:
-                GF.jump()
+                Thread(target=GF.jump).start() 
             if key==Key.tab:
                 GF.heal()
             if key==Key.end:
-                GF.suspend_game()
+                ini.IS_SUSPEND= not ini.IS_SUSPEND
+                Thread(target=GF.suspend_game).start() 
             if key==Key.page_down:
                 GF.act3()
             if key==Key.page_up:

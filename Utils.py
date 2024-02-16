@@ -25,10 +25,10 @@ def is_online(): #0-线上 #1-故事
     return read_memory(address_by_offsets(Offsets.IS_ONLINE),c_ulong)!=1
 
 def is_in_car(): #0-载具外 #1-载具内
-    return read_memory(address_by_offsets(Offsets.IS_IN_CAR),c_ulong)!=0
+    return read_memory(address_by_offsets(Offsets.IS_IN_CAR),c_ubyte)!=0
 
-def is_first_person(place):
-    return read_memory(place,c_ulong)==4
+def is_first_person():
+    return read_memory(address_by_offsets(Offsets.IS_FIRST_PERSON),c_ulong)==4
 
 def is_need_reload():
     #print(read_memory(address_by_offsets(Offsets.CLIP_NUM),c_ulong))
@@ -41,6 +41,15 @@ def is_snakcs_none():
     return ini.SNACKS==0
 def is_texting():
     return read_memory(address_by_offsets(Offsets.IS_TEXTING),c_ubyte)==1
+def is_home_open():
+    return read_memory(address_by_offsets(Offsets.IS_HOME_MENU),c_ubyte)==1
+def is_look_back():
+    return read_memory(address_by_offsets(Offsets.IS_LOOK_BACK),c_ubyte)==0
+
+def is_weaponlist_open():
+    return read_memory(address_by_offsets(Offsets.IS_WEAPONLIST_OPEN),c_ubyte)==1
+
+
 def crt_health():#当前血量
     return read_memory(address_by_offsets(Offsets.CURRENT_HEALTH),c_float)
 
@@ -57,15 +66,18 @@ def badsport():
     return read_memory(address_by_offsets(Offsets.BADSPORT),c_float)
 
 def ammo_left_times():
-    left_times=0
-    if 0<=crt_weapon()<=5 and crt_weapon()!=1:
+    if is_in_car():
         left_times=1
-    elif crt_weapon()==1:
-        left_times=2
-    elif crt_weapon()==6:
-        left_times=6
     else:
-        left_times=5
+        left_times=0
+        if 0<=crt_weapon()<=5 and crt_weapon()!=1:
+            left_times=1
+        elif crt_weapon()==1:
+            left_times=2
+        elif crt_weapon()==6:
+            left_times=6
+        else:
+            left_times=5
     return left_times+1
 
 def press_and_release(key):

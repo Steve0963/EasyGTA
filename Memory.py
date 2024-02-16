@@ -57,7 +57,7 @@ def address_by_offsets(offsets):
         ctypes.windll.kernel32.CloseHandle(process)
         return base_address+offsets[-1]
     
-def read_memory(address,data_type):
+def read_memory(address,data_type=ctypes.c_ulong):
     #print(hex(address))
     process=ctypes.windll.kernel32.OpenProcess(PROCESS_ALL_ACCESS,False,ini.PID)
     buffer_size = ctypes.sizeof(ctypes.c_uint64)
@@ -81,3 +81,4 @@ def write_memory(address,type,data):
         return success != 0
     else:
         return False  
+    

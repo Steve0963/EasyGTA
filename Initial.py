@@ -7,8 +7,7 @@ PROCESS_NAME="GTA5.exe"
 ICON_PATH =join(dirname(__file__), 'icon.png')
 
 #是否挂机
-IS_IDLE=False
-
+IS_SUSPEND=False
 X2_PRESSED = False
 LEFT_PRESSED =False
 

@@ -14,6 +14,13 @@ LEFT=keyboard.Key.left
 RIGHT=keyboard.Key.right
 ENTER=keyboard.Key.enter
 
+AMMO=keyboard.Key.f3
+NECKLACE=keyboard.Key.f4
+START_EGINE=keyboard.Key.f5
+SNACKS=keyboard.Key.f6
+SESSION=keyboard.Key.f7
+IDLE=keyboard.Key.f11
+
 class Weapons:
     PISTO=6
     MACHINE_GUN=8
