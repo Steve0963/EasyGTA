@@ -23,48 +23,50 @@ def kill_game():
 
 def idle():
     if Utils.is_look_back():
-        release(KeyBindings.LOOK_BACK)
+        release(KeyBindings.GameKeyBind.LOOK_BACK)
     else:
-        press(KeyBindings.LOOK_BACK)
+        press(KeyBindings.GameKeyBind.LOOK_BACK)
 
 def releaseC():
     if Utils.is_in_car():
-        release(KeyBindings.LOOK_BACK) 
+        release(KeyBindings.GameKeyBind.LOOK_BACK) 
     else:
-        press(KeyBindings.LOOK_BACK)
+        press(KeyBindings.GameKeyBind.LOOK_BACK)
 
 def heal():
-    if not Utils.is_snakcs_none() and not Utils.is_in_car():
-        if Utils.crt_health()<HEALTH_LIMLI:
-            cnt=0
-            armo=Memory.address_by_offsets(Offsets.ARMO)
-            press(KeyBindings.WEAPON_LIST)
-            sleep(0.15)
-            crt_health=Utils.crt_health()
+    if not Utils.is_in_car() and Utils.crt_health()<HEALTH_LIMLI:
+        armo=Memory.address_by_offsets(Offsets.ARMO)
+        health=Memory.address_by_offsets(Offsets.CURRENT_HEALTH)
+        press(KeyBindings.GameKeyBind.WEAPON_LIST)
+        sleep(0.15)
+        if Utils.is_weaponlist_open():
             while Utils.crt_health() <HEALTH_LIMLI:
-                press_and_release(KeyBindings.HEALTH)
-                cnt+=1
-                if cnt>15:
-                    break
-            if crt_health==Utils.crt_health() and crt_health!=HEALTH_LIMLI:
-                ini.SNACKS=0
+                #press_and_release(KeyBindings.HEALTH)
+                Memory.write_memory(health,"f",Utils.crt_health()+10)
             sleep(0.1)
-            if Utils.is_weaponlist_open():
-                Memory.write_memory(armo,"f",50)
+            Memory.write_memory(armo,"f",50)
             #press_and_release(KeyBindings.ARMO)
-            release(KeyBindings.WEAPON_LIST)
+        release(KeyBindings.GameKeyBind.WEAPON_LIST)
 
 def esc():
     if Utils.is_in_car() and not Utils.is_pause() and not Utils.is_texting():
         sleep(0.2)
-        press_and_release(KeyBindings.ESC)
+        press_and_release(KeyBindings.KeyBoard.ESC)
 
 def tab():
-    press_and_release(KeyBindings.WEAPON_LIST)
+    press_and_release(KeyBindings.GameKeyBind.WEAPON_LIST)
 
 def jump():
-    if not Utils.is_in_car() and not Utils.is_home_open():
-        press_and_release(KeyBindings.JUMP)
+    if not Utils.is_in_car() and not Utils.is_home_open() and not ini.IS_JUMP:
+            #if not ini.IS_JUMP:
+                ini.IS_JUMP=True
+                while ini.IS_JUMP:
+                    press_and_release(KeyBindings.GameKeyBind.JUMP)
+                    if 0<Utils.crt_health()<HEALTH_LIMLI*0.55:
+                        heal()
+                    sleep(0.05)
+            
+            
 
 def reload_while_down():
     if not Utils.is_pause() and not Utils.is_in_car():
@@ -74,11 +76,11 @@ def reload_while_down():
                     break
                 quick_last_weapon()
 
-            elif Utils.crt_weapon_ammo()>10000 and Utils.is_first_person():
-                sleep(0.5)
-                quick_last_weapon()
+            #elif Utils.crt_weapon_ammo()>10000 and Utils.is_first_person():
+                #sleep(0.5)
+                #quick_last_weapon()
             elif trans_weapon()==KeyBindings.Weapons.MELEE_WEAPON and not Utils.is_home_open() and not Utils.is_texting() :
-                    press_and_release(KeyBindings.CONTEXT)
+                    press_and_release(KeyBindings.GameKeyBind.CONTEXT)
             else:
                 pass
             sleep(0.2)
@@ -130,80 +132,84 @@ def quick_last_weapon():
         ini.CRT_WEAPON=KeyBindings.Weapons.PISTO
     elif ini.CRT_WEAPON==KeyBindings.Weapons.HEAVY_WEAPON and not Utils.is_first_person():
         ini.CRT_WEAPON=KeyBindings.Weapons.PISTO
+    else:
+        pass
 
-    press(KeyCode.from_char(KeyBindings.Weapons.SPECIAL_WEAPON))
-    press(KeyCode.from_char(ini.CRT_WEAPON))
-    release(KeyCode.from_char(ini.CRT_WEAPON))
-    release(KeyCode.from_char(KeyBindings.Weapons.SPECIAL_WEAPON))
+    #press(KeyCode.from_char(KeyBindings.Weapons.SPECIAL_WEAPON))
+   # press(KeyCode.from_char(ini.CRT_WEAPON))
+   # release(KeyCode.from_char(ini.CRT_WEAPON))
+   # release(KeyCode.from_char(KeyBindings.Weapons.SPECIAL_WEAPON))
+    press_and_release(KeyCode.from_char(KeyBindings.Weapons.SPECIAL_WEAPON))
+    press_and_release(KeyCode.from_char(ini.CRT_WEAPON))
 
 
 def buy_ammo():
     ahk('m',delay=0.2)
-    ahk(KeyBindings.UP,7)
-    ahk(KeyBindings.ENTER,2)
-    ahk(KeyBindings.LEFT,Utils.ammo_left_times())
-    ahk(KeyBindings.DOWN)
-    ahk(KeyBindings.ENTER)
+    ahk(KeyBindings.KeyBoard.UP,7)
+    ahk(KeyBindings.KeyBoard.ENTER,2)
+    ahk(KeyBindings.KeyBoard.LEFT,Utils.ammo_left_times())
+    ahk(KeyBindings.KeyBoard.DOWN)
+    ahk(KeyBindings.KeyBoard.ENTER)
     ahk('m',delay=0)
 
 
 def wear_necklace():
     ahk('m',delay=0.2)
-    ahk(KeyBindings.UP,6)
-    ahk(KeyBindings.ENTER)
-    ahk(KeyBindings.DOWN)
-    ahk(KeyBindings.ENTER)
-    ahk(KeyBindings.DOWN,6)
-    ahk(KeyBindings.LEFT)
+    ahk(KeyBindings.KeyBoard.UP,6)
+    ahk(KeyBindings.KeyBoard.ENTER)
+    ahk(KeyBindings.KeyBoard.DOWN)
+    ahk(KeyBindings.KeyBoard.ENTER)
+    ahk(KeyBindings.KeyBoard.DOWN,6)
+    ahk(KeyBindings.KeyBoard.LEFT)
     ahk('m',delay=0)
 
 def start_egine():
     ahk('m',delay=0.2)
-    ahk(KeyBindings.UP,9)
-    ahk(KeyBindings.ENTER)
-    ahk(KeyBindings.UP)
-    ahk(KeyBindings.ENTER)
-    ahk(KeyBindings.DOWN,2)
-    ahk(KeyBindings.LEFT)
-    ahk(KeyBindings.ENTER)
-    ahk(KeyBindings.DOWN,4)
-    ahk(KeyBindings.ENTER,2)
+    ahk(KeyBindings.KeyBoard.UP,9)
+    ahk(KeyBindings.KeyBoard.ENTER)
+    ahk(KeyBindings.KeyBoard.UP)
+    ahk(KeyBindings.KeyBoard.ENTER)
+    ahk(KeyBindings.KeyBoard.DOWN,2)
+    ahk(KeyBindings.KeyBoard.LEFT)
+    ahk(KeyBindings.KeyBoard.ENTER)
+    ahk(KeyBindings.KeyBoard.DOWN,4)
+    ahk(KeyBindings.KeyBoard.ENTER,2)
     ahk('m',delay=0)
     
 def snack_on_car():
     ahk('m',delay=0.2)
-    ahk(KeyBindings.UP,7)
-    ahk(KeyBindings.ENTER)
-    ahk(KeyBindings.DOWN,2)
-    ahk(KeyBindings.ENTER)
+    ahk(KeyBindings.KeyBoard.UP,7)
+    ahk(KeyBindings.KeyBoard.ENTER)
+    ahk(KeyBindings.KeyBoard.DOWN,2)
+    ahk(KeyBindings.KeyBoard.ENTER)
 
 def change_session():
     ahk('p',delay=0.2)
-    ahk(KeyBindings.RIGHT,delay=0.5)
-    ahk(KeyBindings.ENTER,delay=0.6)
-    ahk(KeyBindings.UP,4)
-    ahk(KeyBindings.ENTER,delay=0.8)
-    ahk(KeyBindings.UP)
+    ahk(KeyBindings.KeyBoard.RIGHT,delay=0.5)
+    ahk(KeyBindings.KeyBoard.ENTER,delay=0.6)
+    ahk(KeyBindings.KeyBoard.UP,4)
+    ahk(KeyBindings.KeyBoard.ENTER,delay=0.8)
+    ahk(KeyBindings.KeyBoard.UP)
 
 def act3():
     if Utils.is_in_facility():
-        press(KeyBindings.DOWN)
-        press(KeyBindings.RIGHT)
+        press(KeyBindings.KeyBoard.DOWN)
+        press(KeyBindings.KeyBoard.RIGHT)
         sleep(0.005)
-        press(KeyBindings.SPACE)
+        press(KeyBindings.KeyBoard.SPACE)
         sleep(0.005)
-        release(KeyBindings.SPACE)
-        release(KeyBindings.DOWN)
-        release(KeyBindings.RIGHT)
+        release(KeyBindings.KeyBoard.SPACE)
+        release(KeyBindings.KeyBoard.DOWN)
+        release(KeyBindings.KeyBoard.RIGHT)
 
 def right_space():
     if Utils.is_in_facility():
-        press(KeyBindings.RIGHT)
+        press(KeyBindings.KeyBoard.RIGHT)
         sleep(0.005)
-        press(KeyBindings.SPACE)
+        press(KeyBindings.KeyBoard.SPACE)
         sleep(0.005)
-        release(KeyBindings.SPACE)
-        release(KeyBindings.RIGHT)
+        release(KeyBindings.KeyBoard.SPACE)
+        release(KeyBindings.KeyBoard.RIGHT)
 
 
 def suspend_game():

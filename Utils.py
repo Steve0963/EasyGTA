@@ -22,7 +22,7 @@ def is_in_facility():#是否在设施
     return read_memory(address_by_offsets(Offsets),c_ulong)==1
 
 def is_online(): #0-线上 #1-故事
-    return read_memory(address_by_offsets(Offsets.IS_ONLINE),c_ulong)!=1
+    return read_memory(address_by_offsets(Offsets.IS_ONLINE),c_float)==125
 
 def is_in_car(): #0-载具外 #1-载具内
     return read_memory(address_by_offsets(Offsets.IS_IN_CAR),c_ubyte)!=0
@@ -48,7 +48,8 @@ def is_look_back():
 
 def is_weaponlist_open():
     return read_memory(address_by_offsets(Offsets.IS_WEAPONLIST_OPEN),c_ubyte)==1
-
+def is_space_down():
+    return read_memory(address_by_offsets(Offsets.IS_SPACE_DOWN),c_ubyte)==0
 
 def crt_health():#当前血量
     return read_memory(address_by_offsets(Offsets.CURRENT_HEALTH),c_float)
@@ -67,18 +68,20 @@ def badsport():
 
 def ammo_left_times():
     if is_in_car():
-        left_times=1
+        left_times=2
     else:
-        left_times=0
-        if 0<=crt_weapon()<=5 and crt_weapon()!=1:
-            left_times=1
-        elif crt_weapon()==1:
+        weapon=crt_weapon()
+        if 0<=weapon<=5 and weapon!=1:
             left_times=2
-        elif crt_weapon()==6:
-            left_times=6
+        elif weapon==1:
+            left_times=3
+        elif weapon==6:
+            left_times=7
+        elif weapon>=7:
+            left_times=2
         else:
-            left_times=5
-    return left_times+1
+            left_times=6
+    return left_times
 
 def press_and_release(key):
     controller.press(key)
@@ -110,7 +113,7 @@ def auto_reload():#自动重启脚本
     sleep(10)
     while not is_online():
         sleep(3)
-    sleep(8)
+    sleep(15)
     restart()
 
 def block():

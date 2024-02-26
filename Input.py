@@ -25,6 +25,7 @@ def on_click(x, y, button, pressed):
         else:
             if button==Button.x2:
                 ini.X2_PRESSED=False
+                
 
             if button==Button.left:
                 ini.LEFT_PRESSED=False
@@ -39,42 +40,44 @@ def on_scroll(x, y, dx, dy):
 def on_press(key):
     if is_in_game():
         try:
-            if  49<=key.vk<=58 and key.vk!=vk(Weapons.SPECIAL_WEAPON):#key.vk 49-58是数字键1-9
+            if  vk(Weapons.MELEE_WEAPON)<=key.vk<=vk(Weapons.HAND) and key.vk!=vk(Weapons.SPECIAL_WEAPON):#key.vk 49-58是数字键1-9
                 GF.tab()
                 if key.vk!=vk(Weapons.HAND) and key.vk!=vk(Weapons.MELEE_WEAPON):
                     ini.CRT_WEAPON=key.vk-48
                     #print(ini.CRT_WEAPON)
-            if key.vk==86:#v键
+            if key.vk==KeyBindings.KeyBoard.V:#v键
                 GF.set_visual()
-            if key.vk==67:#v键
-                ini.SNACKS=1
+            if key.vk==KeyBindings.KeyBoard.C:#c键
+                #ini.SNACKS=1
+                pass
 
         except:
-            if key==KeyBindings.AMMO:
+            if key==KeyBindings.Function.AMMO:
                GF.buy_ammo()
-            if key==KeyBindings.NECKLACE:
+            if key==KeyBindings.Function.NECKLACE:
                GF.wear_necklace()
-            if key==KeyBindings.START_EGINE:
+            if key==KeyBindings.Function.START_EGINE:
                 GF.start_egine()
-            if key ==KeyBindings.SNACKS:
+            if key ==KeyBindings.Function.SNACKS:
                 GF.snack_on_car()
-            if key ==KeyBindings.SESSION:
+            if key ==KeyBindings.Function.SESSION:
                 #GF.change_session()
                 pass
-            if key==KeyBindings.IDLE:
+            if key==KeyBindings.Function.IDLE:
                 GF.idle()
-            if key== Key.space:
+            if key== KeyBindings.Function.JUMP:
                 Thread(target=GF.jump).start() 
-            if key==Key.tab:
-                GF.heal()
-            if key==Key.end:
+                #GF.jump()
+            if key==KeyBindings.Function.HEAL:
+                Thread(target=GF.heal).start() 
+            if key==KeyBindings.Function.SUSPEND:
                 ini.IS_SUSPEND= not ini.IS_SUSPEND
                 Thread(target=GF.suspend_game).start() 
-            if key==Key.page_down:
+            if key==KeyBindings.Function.ACT3:
                 GF.act3()
-            if key==Key.page_up:
+            if key==KeyBindings.Function.ACT1_ACT2:
                 GF.right_space()
-            if key==Key.delete:
+            if key==KeyBindings.Function.KILL:
                 GF.kill_game()
                 auto_reload()
     
@@ -89,6 +92,7 @@ def on_press(key):
 #键盘释放事件
 def on_release(key):
     if is_in_game():
-        if key ==Key.alt_l:
+        if key ==KeyBindings.Function.INSTANT_STOP:
             GF.esc()
-        
+        if key==KeyBindings.Function.JUMP:
+            ini.IS_JUMP=False

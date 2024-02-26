@@ -1,25 +1,37 @@
-from pynput import keyboard
-HEALTH='='
-ARMO='-'
-LOOK_BACK='c'
-PAUSE='p'
-WEAPON_LIST=keyboard.Key.insert
-JUMP=keyboard.Key.ctrl_r
-CONTEXT='e'
-ESC=keyboard.Key.esc
-SPACE=keyboard.Key.space
-UP=keyboard.Key.up
-DOWN=keyboard.Key.down
-LEFT=keyboard.Key.left
-RIGHT=keyboard.Key.right
-ENTER=keyboard.Key.enter
+from pynput.keyboard import Key
+class GameKeyBind:
+    HEALTH='='
+    ARMO='-'
+    LOOK_BACK='c'
+    WEAPON_LIST=Key.insert
+    JUMP=Key.ctrl_r
+    CONTEXT='e'
 
-AMMO=keyboard.Key.f3
-NECKLACE=keyboard.Key.f4
-START_EGINE=keyboard.Key.f5
-SNACKS=keyboard.Key.f6
-SESSION=keyboard.Key.f7
-IDLE=keyboard.Key.f11
+class KeyBoard:
+    V=86
+    C=67
+    ESC=Key.esc
+    SPACE=Key.space
+    UP=Key.up
+    DOWN=Key.down
+    LEFT=Key.left
+    RIGHT=Key.right
+    ENTER=Key.enter
+
+class Function:
+    AMMO=Key.f3
+    NECKLACE=Key.f4
+    START_EGINE=Key.f5
+    SNACKS=Key.f6
+    SESSION=Key.f7
+    IDLE=Key.f11
+    SUSPEND=Key.end
+    KILL=Key.delete
+    ACT3=Key.page_down
+    ACT1_ACT2=Key.page_up
+    HEAL=Key.tab
+    JUMP=Key.space
+    INSTANT_STOP=Key.alt_l
 
 class Weapons:
     PISTO=6
