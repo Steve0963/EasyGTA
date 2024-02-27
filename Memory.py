@@ -81,7 +81,3 @@ def write_memory(address,type,data):
         return success != 0
     else:
         return False  
-    
-index=0x1574589
-print(0x8 * (index>> 0x12 & 0x3F)) 
-print(0x8 * (index & 0x3FFFF))
