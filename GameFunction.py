@@ -47,43 +47,46 @@ def heal():
             Memory.write_memory(armo,"f",50)
             #press_and_release(KeyBindings.ARMO)
         release(KeyBindings.GameKeyBind.WEAPON_LIST)
+   
 
-def esc():
-    if Utils.is_in_car() and not Utils.is_pause() and not Utils.is_texting():
-        sleep(0.2)
+def auto_esc():
+    if Utils.is_character_select() and Utils.is_in_car()  :
+        sleep(0.18)
         press_and_release(KeyBindings.KeyBoard.ESC)
 
 def tab():
     press_and_release(KeyBindings.GameKeyBind.WEAPON_LIST)
 
+def auto_tab():
+    sleep(0.07)
+    tab()
+
 def jump():
     if not Utils.is_in_car() and not Utils.is_home_open() and not ini.IS_JUMP:
-            #if not ini.IS_JUMP:
                 ini.IS_JUMP=True
                 while ini.IS_JUMP:
                     press_and_release(KeyBindings.GameKeyBind.JUMP)
                     if 0<Utils.crt_health()<HEALTH_LIMLI*0.55:
                         heal()
                     sleep(0.05)
-            
-            
 
 def reload_while_down():
-    if not Utils.is_pause() and not Utils.is_in_car():
-        while ini.LEFT_PRESSED:
+    if not Utils.is_pause() and not Utils.is_in_car() :
+        while ini.LEFT_PRESSED and Utils.is_in_game():
             if Utils.is_need_reload() and Utils.crt_weapon_ammo()!=0:
-                if ini.CRT_WEAPON==KeyBindings.Weapons.SNIPER:
+                if ini.CRT_WEAPON==KeyBindings.Weapons.SNIPER or not ini.LEFT_PRESSED:
                     break
                 quick_last_weapon()
-
-            #elif Utils.crt_weapon_ammo()>10000 and Utils.is_first_person():
-                #sleep(0.5)
-                #quick_last_weapon()
             elif trans_weapon()==KeyBindings.Weapons.MELEE_WEAPON and not Utils.is_home_open() and not Utils.is_texting() :
                     press_and_release(KeyBindings.GameKeyBind.CONTEXT)
             else:
                 pass
-            sleep(0.2)
+            for i in range(120):
+                if not ini.LEFT_PRESSED:
+                    break
+                sleep(0.001)
+        if ini.CRT_WEAPON==KeyBindings.Weapons.HEAVY_WEAPON:
+            melee_hand()
     
 
 def reload_while_up():
@@ -91,7 +94,6 @@ def reload_while_up():
         if ini.CRT_WEAPON==KeyBindings.Weapons.SNIPER and Utils.is_need_reload():
             quick_last_weapon()
     
-
 
 def tab_run():
     while ini.X2_PRESSED:
@@ -101,6 +103,7 @@ def tab_run():
     quick_last_weapon()
 
 def melee_hand():
+    ini.LEFT_PRESSED=False
     press(KeyCode.from_char(KeyBindings.Weapons.SPECIAL_WEAPON))
     press(KeyCode.from_char(KeyBindings.Weapons.HAND))
     release(KeyCode.from_char(KeyBindings.Weapons.HAND))
@@ -128,19 +131,14 @@ def trans_weapon():
     return weapon
 
 def quick_last_weapon():
-    if ini.CRT_WEAPON==KeyBindings.Weapons.MELEE_WEAPON:
+    if ini.CRT_WEAPON==KeyBindings.Weapons.MELEE_WEAPON or ini.CRT_WEAPON==KeyBindings.Weapons.HEAVY_WEAPON and not Utils.is_first_person():
         ini.CRT_WEAPON=KeyBindings.Weapons.PISTO
-    elif ini.CRT_WEAPON==KeyBindings.Weapons.HEAVY_WEAPON and not Utils.is_first_person():
-        ini.CRT_WEAPON=KeyBindings.Weapons.PISTO
-    else:
-        pass
-
-    #press(KeyCode.from_char(KeyBindings.Weapons.SPECIAL_WEAPON))
-   # press(KeyCode.from_char(ini.CRT_WEAPON))
-   # release(KeyCode.from_char(ini.CRT_WEAPON))
-   # release(KeyCode.from_char(KeyBindings.Weapons.SPECIAL_WEAPON))
-    press_and_release(KeyCode.from_char(KeyBindings.Weapons.SPECIAL_WEAPON))
-    press_and_release(KeyCode.from_char(ini.CRT_WEAPON))
+    press(KeyCode.from_char(KeyBindings.Weapons.SPECIAL_WEAPON))
+    press(KeyCode.from_char(ini.CRT_WEAPON))
+    release(KeyCode.from_char(ini.CRT_WEAPON))
+    release(KeyCode.from_char(KeyBindings.Weapons.SPECIAL_WEAPON))
+    #press_and_release(KeyCode.from_char(KeyBindings.Weapons.SPECIAL_WEAPON))
+    #press_and_release(KeyCode.from_char(ini.CRT_WEAPON))
 
 
 def buy_ammo():
@@ -223,7 +221,6 @@ def suspend_game():
             Memory.resume()
             ini.IS_SUSPEND=False
             
-            
 
 
 def set_visual():
@@ -234,13 +231,11 @@ def set_visual():
             if Utils.is_first_person():
                 for address in addresses[1:]:
                     Memory.write_memory(address,"i",ini.THIRD_PERSON)
-
             else:
                 for address in addresses[1:]:
                     Memory.write_memory(address,"i",ini.FIRST_PERSON)
 
         else:
-
             if Utils.is_first_person():
                 Memory.write_memory(addresses[0],"i",ini.THIRD_PERSON)
 
