@@ -50,7 +50,8 @@ def is_weaponlist_open():
     return read_memory(address_by_offsets(Offsets.IS_WEAPONLIST_OPEN),c_ubyte)==1
 def is_space_down():
     return read_memory(address_by_offsets(Offsets.IS_SPACE_DOWN),c_ubyte)==0
-
+def is_character_select():
+    return read_memory(address_by_offsets(Offsets.IS_CHARACTER_SELECT),c_ubyte)==1
 def crt_health():#当前血量
     return read_memory(address_by_offsets(Offsets.CURRENT_HEALTH),c_float)
 
@@ -100,6 +101,7 @@ def ahk(key,times=1,delay=0.02):
 
 def move(x,y):
     mouse_controller.move(x,y)
+
 
 def restart():#重启脚本
     python_executable = executable

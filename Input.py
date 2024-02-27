@@ -1,6 +1,5 @@
 from Utils import is_in_game,auto_reload
 from pynput.mouse import Button
-from pynput.keyboard import Key
 from  threading import Thread,Timer
 import GameFunction as GF
 import Initial as ini
@@ -10,6 +9,7 @@ def vk(key):
     return key+48
 
 def on_click(x, y, button, pressed):
+    ini.IS_JUMP=False
     if is_in_game():
         if pressed:
             if button==Button.x1:
@@ -36,12 +36,13 @@ def on_scroll(x, y, dx, dy):
     if is_in_game():
         delay_seconds = 1.0
         Timer(delay_seconds, GF.trans_weapon).start()
-                
+def on_move(x, y):
+        return False  # 如果鼠标被禁用，拦截鼠标移动事件
 def on_press(key):
     if is_in_game():
         try:
             if  vk(Weapons.MELEE_WEAPON)<=key.vk<=vk(Weapons.HAND) and key.vk!=vk(Weapons.SPECIAL_WEAPON):#key.vk 49-58是数字键1-9
-                GF.tab()
+                GF.auto_tab()
                 if key.vk!=vk(Weapons.HAND) and key.vk!=vk(Weapons.MELEE_WEAPON):
                     ini.CRT_WEAPON=key.vk-48
                     #print(ini.CRT_WEAPON)
@@ -61,15 +62,14 @@ def on_press(key):
             if key ==KeyBindings.Function.SNACKS:
                 GF.snack_on_car()
             if key ==KeyBindings.Function.SESSION:
-                #GF.change_session()
                 pass
             if key==KeyBindings.Function.IDLE:
                 GF.idle()
             if key== KeyBindings.Function.JUMP:
                 Thread(target=GF.jump).start() 
-                #GF.jump()
             if key==KeyBindings.Function.HEAL:
                 Thread(target=GF.heal).start() 
+
             if key==KeyBindings.Function.SUSPEND:
                 ini.IS_SUSPEND= not ini.IS_SUSPEND
                 Thread(target=GF.suspend_game).start() 
@@ -93,6 +93,6 @@ def on_press(key):
 def on_release(key):
     if is_in_game():
         if key ==KeyBindings.Function.INSTANT_STOP:
-            GF.esc()
+            GF.auto_esc()
         if key==KeyBindings.Function.JUMP:
             ini.IS_JUMP=False
