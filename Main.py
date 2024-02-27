@@ -5,7 +5,7 @@ from GameFunction import badsport_value
 import Initial as ini
 from Utils import restart
 from pynput import keyboard, mouse
-from Input import on_press,on_release,on_click,on_scroll
+from Input import on_press,on_release,on_click,on_scroll,on_move
 
 def exit_click(icon):
     ini.STOP_LISTENING=True
