@@ -58,7 +58,7 @@ def tab():
     press_and_release(KeyBindings.GameKeyBind.WEAPON_LIST)
 
 def auto_tab():
-    sleep(0.07)
+    sleep(0.075)
     tab()
 
 def jump():
@@ -76,7 +76,8 @@ def reload_while_down():
             if Utils.is_need_reload() and Utils.crt_weapon_ammo()!=0:
                 if ini.CRT_WEAPON==KeyBindings.Weapons.SNIPER or not ini.LEFT_PRESSED:
                     break
-                quick_last_weapon()
+                else:
+                    quick_last_weapon()
             elif trans_weapon()==KeyBindings.Weapons.MELEE_WEAPON and not Utils.is_home_open() and not Utils.is_texting() :
                     press_and_release(KeyBindings.GameKeyBind.CONTEXT)
             else:
@@ -85,7 +86,7 @@ def reload_while_down():
                 if not ini.LEFT_PRESSED:
                     break
                 sleep(0.001)
-        if ini.CRT_WEAPON==KeyBindings.Weapons.HEAVY_WEAPON:
+        if ini.CRT_WEAPON==KeyBindings.Weapons.HEAVY_WEAPON and Utils.is_first_person():
             melee_hand()
     
 
