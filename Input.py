@@ -112,7 +112,7 @@ def on_press(key):
 # 键盘释放事件
 def on_release(key):
     if is_in_game():
-        
+
         if key == KeyBindings.Function.INSTANT_STOP:
             GF.auto_esc()
 
