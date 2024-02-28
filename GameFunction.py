@@ -64,7 +64,7 @@ def tab():
 
 
 def auto_tab():
-    sleep(0.075)
+    sleep(0.068)
     tab()
 
 
@@ -79,13 +79,16 @@ def jump():
 
 
 def reload_while_down():
-    if not Utils.is_pause() and not Utils.is_in_car():
+    if (
+        not Utils.is_weaponwheel_open()
+        and not Utils.is_in_car()
+        and not Utils.is_pause()
+    ):
         while ini.LEFT_PRESSED and Utils.is_in_game():
             if Utils.is_need_reload() and Utils.crt_weapon_ammo() != 0:
                 if ini.CRT_WEAPON == KeyBindings.Weapons.SNIPER or not ini.LEFT_PRESSED:
                     break
-                else:
-                    quick_last_weapon()
+                quick_last_weapon()
             elif (
                 trans_weapon() == KeyBindings.Weapons.MELEE_WEAPON
                 and not Utils.is_home_open()
@@ -94,13 +97,14 @@ def reload_while_down():
                 press_and_release(KeyBindings.GameKeyBind.CONTEXT)
             else:
                 pass
-            for i in range(120):
+            for i in range(115):
                 if not ini.LEFT_PRESSED:
                     break
                 sleep(0.001)
+
         if (
-            ini.CRT_WEAPON == KeyBindings.Weapons.HEAVY_WEAPON
-            and Utils.is_first_person()
+            Utils.is_first_person()
+            and ini.CRT_WEAPON == KeyBindings.Weapons.HEAVY_WEAPON
         ):
             melee_hand()
 
@@ -120,7 +124,6 @@ def tab_run():
 
 
 def melee_hand():
-    ini.LEFT_PRESSED = False
     press(KeyCode.from_char(KeyBindings.Weapons.SPECIAL_WEAPON))
     press(KeyCode.from_char(KeyBindings.Weapons.HAND))
     release(KeyCode.from_char(KeyBindings.Weapons.HAND))
