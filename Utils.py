@@ -64,6 +64,9 @@ def is_look_back():
 def is_weaponlist_open():
     return read_memory(address_by_offsets(Offsets.IS_WEAPONLIST_OPEN), c_ubyte) == 1
 
+def is_weaponwheel_open():
+    return read_memory(address_by_offsets(Offsets.IS_WEAPONWHEEL_OPEN), c_ubyte) == 1
+
 
 def is_space_down():
     return read_memory(address_by_offsets(Offsets.IS_SPACE_DOWN), c_ubyte) == 0
