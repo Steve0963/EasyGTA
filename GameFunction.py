@@ -1,7 +1,7 @@
 from pynput.keyboard import KeyCode
 import Memory
 from time import sleep
-from Utils import ahk, press_and_release, press, release, move
+from Utils import ahk, press_and_release, press, release
 import Initial as ini
 import Utils
 import Offsets
@@ -64,7 +64,7 @@ def tab():
 
 
 def auto_tab():
-    sleep(0.068)
+    sleep(0.075)
     tab()
 
 
@@ -86,7 +86,6 @@ def reload_while_down():
     ):
         while ini.LEFT_PRESSED and Utils.is_in_game():
             if Utils.is_need_reload() and Utils.crt_weapon_ammo() != 0:
-                sleep(0.005)
                 if ini.CRT_WEAPON == KeyBindings.Weapons.SNIPER or not ini.LEFT_PRESSED:
                     break
                 quick_last_weapon()
@@ -98,17 +97,10 @@ def reload_while_down():
                 press_and_release(KeyBindings.GameKeyBind.CONTEXT)
             else:
                 pass
-            for i in range(110):
+            for i in range(100):
                 if not ini.LEFT_PRESSED:
                     break
                 sleep(0.001)
-
-        if (
-            Utils.is_first_person()
-        
-            and ini.CRT_WEAPON == KeyBindings.Weapons.HEAVY_WEAPON
-        ):
-            melee_hand()
 
 
 def reload_while_up():
@@ -131,27 +123,20 @@ def melee_hand():
     press(KeyCode.from_char(KeyBindings.Weapons.HAND))
     release(KeyCode.from_char(KeyBindings.Weapons.HAND))
     release(KeyCode.from_char(KeyBindings.Weapons.SPECIAL_WEAPON))
-
+    
 def trans_weapon():
-    weapon = Utils.crt_weapon()
-    if weapon == 0:
-        weapon = KeyBindings.Weapons.PISTO
-    elif weapon == 1:
-        weapon = KeyBindings.Weapons.MACHINE_GUN
-    elif weapon == 2:
-        weapon = KeyBindings.Weapons.RIFLE
-    elif weapon == 3:
-        weapon = KeyBindings.Weapons.SNIPER
-    elif weapon == 4:
-        weapon = KeyBindings.Weapons.MELEE_WEAPON
-    elif weapon == 5:
-        weapon = KeyBindings.Weapons.SHOT_GUN
-    elif weapon == 6:
-        weapon = KeyBindings.Weapons.HEAVY_WEAPON
-    else:
-        weapon = ini.CRT_WEAPON
-    ini.CRT_WEAPON = weapon
-    return weapon
+    weapon_mapping = {
+        0: KeyBindings.Weapons.PISTO,
+        1: KeyBindings.Weapons.MACHINE_GUN,
+        2: KeyBindings.Weapons.RIFLE,
+        3: KeyBindings.Weapons.SNIPER,
+        4: KeyBindings.Weapons.MELEE_WEAPON,
+        5: KeyBindings.Weapons.SHOT_GUN,
+        6: KeyBindings.Weapons.HEAVY_WEAPON,
+    }
+    ini.CRT_WEAPON = weapon_mapping.get(Utils.crt_weapon(), ini.CRT_WEAPON)
+
+    return ini.CRT_WEAPON
 
 
 def quick_last_weapon():
@@ -165,9 +150,6 @@ def quick_last_weapon():
     press(KeyCode.from_char(ini.CRT_WEAPON))
     release(KeyCode.from_char(ini.CRT_WEAPON))
     release(KeyCode.from_char(KeyBindings.Weapons.SPECIAL_WEAPON))
-    # press_and_release(KeyCode.from_char(KeyBindings.Weapons.SPECIAL_WEAPON))
-    # press_and_release(KeyCode.from_char(ini.CRT_WEAPON))
-
 
 def buy_ammo():
     ahk("m", delay=0.2)
