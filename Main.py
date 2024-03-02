@@ -3,17 +3,11 @@ from pystray import Icon, Menu, MenuItem
 from PIL import Image
 from GameFunction import badsport_value
 import Initial as ini
-from Utils import restart
+from Utils import restart, exit_click
 from pynput import keyboard, mouse
 from Input import on_press, on_release, on_click, on_scroll
 
-
-def exit_click(icon):
-    ini.STOP_LISTENING = True
-    icon.stop()
-
-
-def creatUI():
+def create_ui():
     icon_image = Image.open(ini.ICON_PATH)
     menu_items = [
         MenuItem(f"BadSportValue : {badsport_value()}", badsport_value),
@@ -22,21 +16,18 @@ def creatUI():
     ]
 
     menu = Menu(*menu_items)
-    icon = Icon(
+    ini.ICON = Icon(
         "Easy GTA5", icon_image, menu=menu, title="Created By QuoVadis8 For GTA5"
     )
-    icon.run()
+    ini.ICON.run()
 
-
-def creat_listener():
+def create_listener():
     key_listener = keyboard.Listener(on_press=on_press, on_release=on_release)
     mouse_listener = mouse.Listener(on_click=on_click, on_scroll=on_scroll)
     key_listener.start()
     mouse_listener.start()
-    if ini.STOP_LISTENING:
-        key_listener.stop()
-        mouse_listener.stop()
 
-
-Thread(target=creatUI).start()
-creat_listener()
+if __name__ == "__main__":
+    Thread(target=create_ui).start()
+    Thread(target=create_listener).start()
+    
