@@ -45,11 +45,11 @@ def heal():
         sleep(0.15)
         if Utils.is_weaponlist_open():
             while Utils.crt_health() < HEALTH_LIMLI:
-                # press_and_release(KeyBindings.HEALTH)
-                Memory.write_memory(health, "f", Utils.crt_health() + 10)
+                 press_and_release(KeyBindings.GameKeyBind.HEALTH)
+                #Memory.write_memory(health, "f", Utils.crt_health() + 10)
             sleep(0.1)
             Memory.write_memory(armo, "f", 50)
-            # press_and_release(KeyBindings.ARMO)
+            # press_and_release(KeyBindings.GameKeyBind.ARMO)
         release(KeyBindings.GameKeyBind.WEAPON_LIST)
 
 
@@ -86,6 +86,7 @@ def reload_while_down():
     ):
         while ini.LEFT_PRESSED and Utils.is_in_game():
             if Utils.is_need_reload() and Utils.crt_weapon_ammo() != 0:
+                sleep(0.005)
                 if ini.CRT_WEAPON == KeyBindings.Weapons.SNIPER or not ini.LEFT_PRESSED:
                     break
                 quick_last_weapon()
@@ -97,13 +98,14 @@ def reload_while_down():
                 press_and_release(KeyBindings.GameKeyBind.CONTEXT)
             else:
                 pass
-            for i in range(115):
+            for i in range(110):
                 if not ini.LEFT_PRESSED:
                     break
                 sleep(0.001)
 
         if (
             Utils.is_first_person()
+        
             and ini.CRT_WEAPON == KeyBindings.Weapons.HEAVY_WEAPON
         ):
             melee_hand()
@@ -120,6 +122,7 @@ def tab_run():
         tab()
         if 0 < Utils.crt_health() < HEALTH_LIMLI * 0.55:
             heal()
+        sleep(0.01)
     quick_last_weapon()
 
 
@@ -128,7 +131,6 @@ def melee_hand():
     press(KeyCode.from_char(KeyBindings.Weapons.HAND))
     release(KeyCode.from_char(KeyBindings.Weapons.HAND))
     release(KeyCode.from_char(KeyBindings.Weapons.SPECIAL_WEAPON))
-
 
 def trans_weapon():
     weapon = Utils.crt_weapon()

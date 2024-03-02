@@ -1,2 +1,3 @@
-/__pycache__/
+# 忽略Python生成的缓存文件
+__pycache__/
 *.pyc
