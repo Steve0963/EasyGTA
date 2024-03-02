@@ -20,8 +20,8 @@ def is_in_game():  # 是否在游戏内
 
 
 def is_in_facility():  # 是否在设施
-    Offsets = [0x200E130]
-    return read_memory(address_by_offsets(Offsets), c_ulong) == 1
+    #Offsets = [0x200E130]
+    return read_memory(address_by_offsets(Offsets.IS_IN_FACLITY), c_ulong) == 1
 
 
 def is_online():  # 0-线上 #1-故事
@@ -98,20 +98,19 @@ def badsport():
 
 def ammo_left_times():
     if is_in_car():
-        left_times = 2
+        return 2
+    weapon = crt_weapon()
+
+    if 0 <= weapon <= 5 and weapon != 1:
+        return 2
+    elif weapon == 1:
+        return 3
+    elif weapon == 6:
+        return 7
+    elif weapon >= 7:
+        return 2
     else:
-        weapon = crt_weapon()
-        if 0 <= weapon <= 5 and weapon != 1:
-            left_times = 2
-        elif weapon == 1:
-            left_times = 3
-        elif weapon == 6:
-            left_times = 7
-        elif weapon >= 7:
-            left_times = 2
-        else:
-            left_times = 6
-    return left_times
+        return 6
 
 
 def press_and_release(key):
@@ -138,9 +137,13 @@ def move(x, y):
 
 
 def restart():  # 重启脚本
+    ini.ICON.stop()
     python_executable = executable
     execl(python_executable, python_executable, *argv)
-
+    
+def exit_click(icon):
+    ini.STOP_LISTENING = True
+    icon.stop()
 
 def auto_reload():  # 自动重启脚本
     sleep(10)
