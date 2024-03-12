@@ -35,7 +35,7 @@ IS_IN_FACLITY = [GLOBAL_ADDRESS + 0x29DFC8]  # ctypes.c_ulong 0x200E130
 # 是否在线
 IS_ONLINE = [GLOBAL_ADDRESS, 0x1520]  # ctypes.c_float
 # 是否p暂停
-IS_PAUSE = [GLOBAL_ADDRESS + 0x28B5F0]  # ctypes.c_ulong 0x1FFB758
+IS_PAUSE = [GLOBAL_ADDRESS + 0x2A7169]  # ctypes.c_ulong 0x20172D1
 # 是否在打字
 IS_TEXTING = [GLOBAL_ADDRESS + 0xFC813E]  # ctypes.c_ubyte 0x2D382A6
 # 是否home菜单

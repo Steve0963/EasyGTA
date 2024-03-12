@@ -42,7 +42,7 @@ def is_need_reload():
 
 
 def is_pause():
-    return read_memory(address_by_offsets(Offsets.IS_PAUSE), c_ulong) == 1
+    return read_memory(address_by_offsets(Offsets.IS_PAUSE), c_ubyte) == 1
 
 
 def is_snakcs_none():
@@ -131,18 +131,26 @@ def ahk(key, times=1, delay=0.02):
         press_and_release(key)
     sleep(delay)
 
-
+def mouse_position():
+    return  mouse_controller.position
 def move(x, y):
-    mouse_controller.move(x, y)
+    #mouse_controller.position=(x, y)
+    mouse_controller.move(x,y)
 
+def press_left():
+    mouse_controller.press(mouse.Button.left)
+def release_left():
+    mouse_controller.release(mouse.Button.left)
+
+    
 
 def restart():  # 重启脚本
+    print(ini.ICON)
     ini.ICON.stop()
     python_executable = executable
     execl(python_executable, python_executable, *argv)
     
 def exit_click(icon):
-    ini.STOP_LISTENING = True
     icon.stop()
 
 def auto_reload():  # 自动重启脚本
