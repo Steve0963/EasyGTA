@@ -45,12 +45,17 @@ def heal():
         sleep(0.15)
         if Utils.is_weaponlist_open():
             while Utils.crt_health() < HEALTH_LIMLI:
-                 press_and_release(KeyBindings.GameKeyBind.HEALTH)
-                #Memory.write_memory(health, "f", Utils.crt_health() + 10)
+                # press_and_release(KeyBindings.GameKeyBind.HEALTH)
+                Memory.write_memory(health, "f", Utils.crt_health() + 20)
+                sleep(0.01)
             sleep(0.1)
             Memory.write_memory(armo, "f", 50)
             # press_and_release(KeyBindings.GameKeyBind.ARMO)
         release(KeyBindings.GameKeyBind.WEAPON_LIST)
+    elif Utils.is_in_car() and Utils.crt_health() < HEALTH_LIMLI:
+        snack_on_car()
+       
+
 
 
 def auto_esc():
@@ -64,7 +69,8 @@ def tab():
 
 
 def auto_tab():
-    sleep(0.075)
+    ini.IS_JUMP = False
+    sleep(0.08)
     tab()
 
 
@@ -86,21 +92,26 @@ def reload_while_down():
     ):
         while ini.LEFT_PRESSED and Utils.is_in_game():
             if Utils.is_need_reload() and Utils.crt_weapon_ammo() != 0:
-                if ini.CRT_WEAPON == KeyBindings.Weapons.SNIPER or not ini.LEFT_PRESSED:
+                if (
+                    ini.CRT_WEAPON == KeyBindings.Weapons.SNIPER
+                    or not ini.LEFT_PRESSED
+                    or ini.CRT_WEAPON == KeyBindings.Weapons.HEAVY_WEAPON
+                ):
                     break
                 quick_last_weapon()
             elif (
                 trans_weapon() == KeyBindings.Weapons.MELEE_WEAPON
+                and not Utils.is_pause()
                 and not Utils.is_home_open()
                 and not Utils.is_texting()
             ):
                 press_and_release(KeyBindings.GameKeyBind.CONTEXT)
             else:
                 pass
-            for i in range(100):
+            for _ in range(10):
                 if not ini.LEFT_PRESSED:
                     break
-                sleep(0.001)
+                sleep(0.011)
 
 
 def reload_while_up():
@@ -123,7 +134,8 @@ def melee_hand():
     press(KeyCode.from_char(KeyBindings.Weapons.HAND))
     release(KeyCode.from_char(KeyBindings.Weapons.HAND))
     release(KeyCode.from_char(KeyBindings.Weapons.SPECIAL_WEAPON))
-    
+
+
 def trans_weapon():
     weapon_mapping = {
         0: KeyBindings.Weapons.PISTO,
@@ -150,6 +162,7 @@ def quick_last_weapon():
     press(KeyCode.from_char(ini.CRT_WEAPON))
     release(KeyCode.from_char(ini.CRT_WEAPON))
     release(KeyCode.from_char(KeyBindings.Weapons.SPECIAL_WEAPON))
+
 
 def buy_ammo():
     ahk("m", delay=0.2)
@@ -192,6 +205,14 @@ def snack_on_car():
     ahk(KeyBindings.KeyBoard.ENTER)
     ahk(KeyBindings.KeyBoard.DOWN, 2)
     ahk(KeyBindings.KeyBoard.ENTER)
+    while Utils.crt_health() < HEALTH_LIMLI:
+        ahk(KeyBindings.KeyBoard.ENTER)
+    ahk(KeyBindings.KeyBoard.BACK)
+    ahk(KeyBindings.KeyBoard.UP)
+    ahk(KeyBindings.KeyBoard.ENTER)
+    ahk(KeyBindings.KeyBoard.UP,3)
+    ahk(KeyBindings.KeyBoard.ENTER)
+    ahk('m', delay=0)
 
 
 def change_session():
@@ -201,6 +222,7 @@ def change_session():
     ahk(KeyBindings.KeyBoard.UP, 4)
     ahk(KeyBindings.KeyBoard.ENTER, delay=0.8)
     ahk(KeyBindings.KeyBoard.UP)
+
 
 
 def act3():
@@ -237,10 +259,33 @@ def suspend_game():
         ini.IS_SUSPEND = False
 
 
+def drill():
+    Utils.press_left()
+    current_x, current_y = Utils.mouse_position()
+
+    # 设置移动的目标位置（在这里向上移动140像素）
+    target_y = current_y - 140
+
+    # 计算每一步的移动距离
+    step = 5
+
+    # 计算需要的步数
+    steps = int(abs(current_y - target_y) / step)
+
+    # 缓慢向上移动鼠标
+    for _ in range(steps):
+        current_x, current_y = Utils.mouse_position()
+        Utils.move(0, 5)
+        print(Utils.mouse_position())
+        sleep(1)  # 调整此处的sleep时间以控制移动速度
+    Utils.release_left()
+
+
 def set_visual():
     if (
         not Utils.is_texting()
-        and not Utils.is_pause()
+        and not Utils.is_home_open()
+        # and not Utils.is_pause()
         and not Utils.is_weaponlist_open()
     ):
         addresses = [Memory.address_by_offsets(Offset) for Offset in Offsets.VISUAL]
