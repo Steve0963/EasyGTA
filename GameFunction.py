@@ -47,7 +47,7 @@ def heal():
             while Utils.crt_health() < HEALTH_LIMLI:
                 # press_and_release(KeyBindings.GameKeyBind.HEALTH)
                 Memory.write_memory(health, "f", Utils.crt_health() + 20)
-                sleep(0.01)
+                sleep(0.02)
             sleep(0.1)
             Memory.write_memory(armo, "f", 50)
             # press_and_release(KeyBindings.GameKeyBind.ARMO)
@@ -59,7 +59,7 @@ def heal():
 
 
 def auto_esc():
-    if Utils.is_character_select() and Utils.is_in_car():
+    if  Utils.is_in_car() and Utils.is_character_select():
         sleep(0.18)
         press_and_release(KeyBindings.KeyBoard.ESC)
 
@@ -165,10 +165,13 @@ def quick_last_weapon():
 
 
 def buy_ammo():
+    dir_key=KeyBindings.KeyBoard.LEFT
+    if Utils.crt_weapon()==6:
+        dir_key=KeyBindings.KeyBoard.RIGHT
     ahk("m", delay=0.2)
     ahk(KeyBindings.KeyBoard.UP, 7)
     ahk(KeyBindings.KeyBoard.ENTER, 2)
-    ahk(KeyBindings.KeyBoard.LEFT, Utils.ammo_left_times())
+    ahk(dir_key, Utils.buy_ammo_times())
     ahk(KeyBindings.KeyBoard.DOWN)
     ahk(KeyBindings.KeyBoard.ENTER)
     ahk("m", delay=0)
