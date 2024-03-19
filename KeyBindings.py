@@ -20,6 +20,7 @@ class KeyBoard:
     LEFT = Key.left
     RIGHT = Key.right
     ENTER = Key.enter
+    BACK=Key.backspace
 
 
 class Function:
