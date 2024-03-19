@@ -96,21 +96,11 @@ def badsport():
     return read_memory(address_by_offsets(Offsets.BADSPORT), c_float)
 
 
-def ammo_left_times():
-    if is_in_car():
-        return 2
-    weapon = crt_weapon()
-
-    if 0 <= weapon <= 5 and weapon != 1:
-        return 2
-    elif weapon == 1:
+def buy_ammo_times():
+    if crt_weapon()==1:
         return 3
-    elif weapon == 6:
-        return 7
-    elif weapon >= 7:
-        return 2
-    else:
-        return 6
+    return 2
+
 
 
 def press_and_release(key):
