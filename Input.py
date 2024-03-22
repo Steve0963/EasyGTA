@@ -1,4 +1,4 @@
-from Utils import is_in_game, auto_reload
+from Utils import is_in_game, auto_reload,restart
 from pynput.mouse import Button
 from threading import Thread, Timer
 import GameFunction as GF
@@ -31,17 +31,23 @@ def on_click(x, y, button, pressed):
 
             if button == Button.left:
                 ini.LEFT_PRESSED = False
-                GF.reload_while_up()
 
 
 def on_scroll(x, y, dx, dy):
     if is_in_game():
         delay_seconds = 1.0
         Timer(delay_seconds, GF.trans_weapon).start()
+        #move(0,-10)
+    else:
+        pass
+        #move(0,1)
+        #print(ini.Y)
+        
 
 
 def on_move(x, y):
-    return False  # 如果鼠标被禁用，拦截鼠标移动事件
+    ini.X=x
+    ini.Y=y
 
 
 def on_press(key):
@@ -76,6 +82,7 @@ def on_press(key):
                 GF.snack_on_car()
 
             if key == KeyBindings.Function.SESSION:
+                #GF.drill()
                 pass
 
             if key == KeyBindings.Function.IDLE:
@@ -86,6 +93,9 @@ def on_press(key):
 
             if key == KeyBindings.Function.HEAL:
                 Thread(target=GF.heal).start()
+                
+            if key==KeyBindings.Function.RELOAD:
+                restart()
 
             if key == KeyBindings.Function.SUSPEND:
                 ini.IS_SUSPEND = not ini.IS_SUSPEND
