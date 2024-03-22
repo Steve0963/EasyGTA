@@ -75,6 +75,12 @@ def is_space_down():
 def is_character_select():
     return read_memory(address_by_offsets(Offsets.IS_CHARACTER_SELECT), c_ubyte) == 1
 
+def is_menu_open():
+    return read_memory(address_by_offsets(Offsets.IS_MENU_OPEN), c_ubyte)!=255
+
+def is_self():
+    return read_memory(address_by_offsets(Offsets.IS_SELF), c_ubyte) == 156
+
 
 def crt_health():  # 当前血量
     return read_memory(address_by_offsets(Offsets.CURRENT_HEALTH), c_float)
@@ -151,7 +157,7 @@ def auto_reload():  # 自动重启脚本
     sleep(10)
     while not is_online():
         sleep(3)
-    sleep(15)
+    sleep(13)
     restart()
 
 
