@@ -38,22 +38,21 @@ def releaseC():
 
 
 def heal():
-    if not Utils.is_in_car() and Utils.crt_health() < HEALTH_LIMLI:
-        armo = Memory.address_by_offsets(Offsets.ARMO)
-        health = Memory.address_by_offsets(Offsets.CURRENT_HEALTH)
-        press(KeyBindings.GameKeyBind.WEAPON_LIST)
-        sleep(0.15)
-        if Utils.is_weaponlist_open():
-            while Utils.crt_health() < HEALTH_LIMLI:
-                # press_and_release(KeyBindings.GameKeyBind.HEALTH)
-                Memory.write_memory(health, "f", Utils.crt_health() + 20)
-                sleep(0.02)
-            sleep(0.1)
-            Memory.write_memory(armo, "f", 50)
-            # press_and_release(KeyBindings.GameKeyBind.ARMO)
-        release(KeyBindings.GameKeyBind.WEAPON_LIST)
-    elif Utils.is_in_car() and Utils.crt_health() < HEALTH_LIMLI:
-        snack_on_car()
+    if Utils.is_self():
+        if not Utils.is_in_car() and Utils.crt_health() < HEALTH_LIMLI:
+            armo = Memory.address_by_offsets(Offsets.ARMO)
+            health = Memory.address_by_offsets(Offsets.CURRENT_HEALTH)
+            press(KeyBindings.GameKeyBind.WEAPON_LIST)
+            sleep(0.15)
+            if Utils.is_weaponlist_open():
+                while Utils.crt_health() < HEALTH_LIMLI:
+                    # press_and_release(KeyBindings.GameKeyBind.HEALTH)
+                    Memory.write_memory(health, "f", Utils.crt_health() + 20)
+                    sleep(0.02)
+                sleep(0.1)
+                Memory.write_memory(armo, "f", 50)
+                # press_and_release(KeyBindings.GameKeyBind.ARMO)
+            release(KeyBindings.GameKeyBind.WEAPON_LIST)
        
 
 
@@ -70,18 +69,18 @@ def tab():
 
 def auto_tab():
     ini.IS_JUMP = False
-    sleep(0.08)
+    sleep(0.11)
     tab()
 
 
 def jump():
-    if not Utils.is_in_car() and not Utils.is_home_open() and not ini.IS_JUMP:
+    if not ini.IS_JUMP and not Utils.is_in_car() and not Utils.is_home_open() :
         ini.IS_JUMP = True
         while ini.IS_JUMP:
             press_and_release(KeyBindings.GameKeyBind.JUMP)
-            if 0 < Utils.crt_health() < HEALTH_LIMLI * 0.55:
+            if 0 < Utils.crt_health() < HEALTH_LIMLI * 0.6:
                 heal()
-            sleep(0.05)
+            sleep(0.03)
 
 
 def reload_while_down():
@@ -113,19 +112,11 @@ def reload_while_down():
                     break
                 sleep(0.011)
 
-
-def reload_while_up():
-    if not Utils.is_pause() and not Utils.is_in_car():
-        if ini.CRT_WEAPON == KeyBindings.Weapons.SNIPER and Utils.is_need_reload():
-            quick_last_weapon()
-
-
 def tab_run():
     while ini.X2_PRESSED:
         tab()
-        if 0 < Utils.crt_health() < HEALTH_LIMLI * 0.55:
+        if 0 < Utils.crt_health() < HEALTH_LIMLI * 0.6:
             heal()
-        sleep(0.01)
     quick_last_weapon()
 
 
@@ -134,6 +125,7 @@ def melee_hand():
     press(KeyCode.from_char(KeyBindings.Weapons.HAND))
     release(KeyCode.from_char(KeyBindings.Weapons.HAND))
     release(KeyCode.from_char(KeyBindings.Weapons.SPECIAL_WEAPON))
+    
 
 
 def trans_weapon():
@@ -165,57 +157,58 @@ def quick_last_weapon():
 
 
 def buy_ammo():
-    dir_key=KeyBindings.KeyBoard.LEFT
-    if Utils.crt_weapon()==6:
-        dir_key=KeyBindings.KeyBoard.RIGHT
-    ahk("m", delay=0.2)
-    ahk(KeyBindings.KeyBoard.UP, 7)
-    ahk(KeyBindings.KeyBoard.ENTER, 2)
-    ahk(dir_key, Utils.buy_ammo_times())
-    ahk(KeyBindings.KeyBoard.DOWN)
-    ahk(KeyBindings.KeyBoard.ENTER)
-    ahk("m", delay=0)
+        dir_key=KeyBindings.KeyBoard.LEFT
+        if Utils.crt_weapon()==6:
+            dir_key=KeyBindings.KeyBoard.RIGHT
+        ahk("m", delay=0.2)
+        ahk(KeyBindings.KeyBoard.UP, 7)
+        ahk(KeyBindings.KeyBoard.ENTER, 2)
+        ahk(dir_key, Utils.buy_ammo_times())
+        ahk(KeyBindings.KeyBoard.DOWN)
+        ahk(KeyBindings.KeyBoard.ENTER)
+        ahk("m", delay=0)
 
 
 def wear_necklace():
-    ahk("m", delay=0.2)
-    ahk(KeyBindings.KeyBoard.UP, 6)
-    ahk(KeyBindings.KeyBoard.ENTER)
-    ahk(KeyBindings.KeyBoard.DOWN)
-    ahk(KeyBindings.KeyBoard.ENTER)
-    ahk(KeyBindings.KeyBoard.DOWN, 6)
-    ahk(KeyBindings.KeyBoard.LEFT)
-    ahk("m", delay=0)
+        ahk("m", delay=0.2)
+        ahk(KeyBindings.KeyBoard.UP, 6)
+        ahk(KeyBindings.KeyBoard.ENTER)
+        ahk(KeyBindings.KeyBoard.DOWN)
+        ahk(KeyBindings.KeyBoard.ENTER)
+        ahk(KeyBindings.KeyBoard.DOWN, 6)
+        ahk(KeyBindings.KeyBoard.LEFT)
+        ahk("m", delay=0)
 
 
 def start_egine():
-    ahk("m", delay=0.2)
-    ahk(KeyBindings.KeyBoard.UP, 9)
-    ahk(KeyBindings.KeyBoard.ENTER)
-    ahk(KeyBindings.KeyBoard.UP)
-    ahk(KeyBindings.KeyBoard.ENTER)
-    ahk(KeyBindings.KeyBoard.DOWN, 2)
-    ahk(KeyBindings.KeyBoard.LEFT)
-    ahk(KeyBindings.KeyBoard.ENTER)
-    ahk(KeyBindings.KeyBoard.DOWN, 4)
-    ahk(KeyBindings.KeyBoard.ENTER, 2)
-    ahk("m", delay=0)
+        ahk("m", delay=0.2)
+        ahk(KeyBindings.KeyBoard.UP, 9)
+        ahk(KeyBindings.KeyBoard.ENTER)
+        ahk(KeyBindings.KeyBoard.UP)
+        ahk(KeyBindings.KeyBoard.ENTER)
+        ahk(KeyBindings.KeyBoard.DOWN, 2)
+        ahk(KeyBindings.KeyBoard.LEFT)
+        ahk(KeyBindings.KeyBoard.ENTER)
+        ahk(KeyBindings.KeyBoard.DOWN, 4)
+        ahk(KeyBindings.KeyBoard.ENTER, 2)
+        ahk("m", delay=0)
 
 
 def snack_on_car():
-    ahk("m", delay=0.2)
-    ahk(KeyBindings.KeyBoard.UP, 7)
-    ahk(KeyBindings.KeyBoard.ENTER)
-    ahk(KeyBindings.KeyBoard.DOWN, 2)
-    ahk(KeyBindings.KeyBoard.ENTER)
-    while Utils.crt_health() < HEALTH_LIMLI:
-        ahk(KeyBindings.KeyBoard.ENTER)
-    ahk(KeyBindings.KeyBoard.BACK)
-    ahk(KeyBindings.KeyBoard.UP)
-    ahk(KeyBindings.KeyBoard.ENTER)
-    ahk(KeyBindings.KeyBoard.UP,3)
-    ahk(KeyBindings.KeyBoard.ENTER)
-    ahk('m', delay=0)
+    if Utils.is_self():
+            ahk("m", delay=0.2)
+            ahk(KeyBindings.KeyBoard.UP, 7)
+            ahk(KeyBindings.KeyBoard.ENTER)
+            ahk(KeyBindings.KeyBoard.DOWN, 2)
+            ahk(KeyBindings.KeyBoard.ENTER)
+            while Utils.crt_health() < HEALTH_LIMLI and Utils.is_in_game():
+                ahk(KeyBindings.KeyBoard.ENTER)
+            ahk(KeyBindings.KeyBoard.BACK)
+            ahk(KeyBindings.KeyBoard.UP)
+            ahk(KeyBindings.KeyBoard.ENTER)
+            ahk(KeyBindings.KeyBoard.UP,3)
+            ahk(KeyBindings.KeyBoard.ENTER)
+            ahk('m', delay=0)
 
 
 def change_session():
@@ -260,28 +253,6 @@ def suspend_game():
                 break
         Memory.resume()
         ini.IS_SUSPEND = False
-
-
-def drill():
-    Utils.press_left()
-    current_x, current_y = Utils.mouse_position()
-
-    # 设置移动的目标位置（在这里向上移动140像素）
-    target_y = current_y - 140
-
-    # 计算每一步的移动距离
-    step = 5
-
-    # 计算需要的步数
-    steps = int(abs(current_y - target_y) / step)
-
-    # 缓慢向上移动鼠标
-    for _ in range(steps):
-        current_x, current_y = Utils.mouse_position()
-        Utils.move(0, 5)
-        print(Utils.mouse_position())
-        sleep(1)  # 调整此处的sleep时间以控制移动速度
-    Utils.release_left()
 
 
 def set_visual():
