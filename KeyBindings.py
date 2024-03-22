@@ -37,6 +37,7 @@ class Function:
     HEAL = Key.tab
     JUMP = Key.space
     INSTANT_STOP = Key.alt_l
+    RELOAD=Key.f12
 
 
 class Weapons:
