@@ -46,7 +46,7 @@ def heal():
             sleep(0.15)
             if Utils.is_weaponlist_open():
                 while Utils.crt_health() < HEALTH_LIMLI:
-                    # press_and_release(KeyBindings.GameKeyBind.HEALTH)
+                    #press_and_release(KeyBindings.GameKeyBind.HEALTH)
                     Memory.write_memory(health, "f", Utils.crt_health() + 20)
                     sleep(0.02)
                 sleep(0.1)
@@ -117,14 +117,16 @@ def tab_run():
         tab()
         if 0 < Utils.crt_health() < HEALTH_LIMLI * 0.6:
             heal()
+    #if not Utils.is_texting() and not Utils.is_home_open():
     quick_last_weapon()
 
 
 def melee_hand():
-    press(KeyCode.from_char(KeyBindings.Weapons.SPECIAL_WEAPON))
-    press(KeyCode.from_char(KeyBindings.Weapons.HAND))
-    release(KeyCode.from_char(KeyBindings.Weapons.HAND))
-    release(KeyCode.from_char(KeyBindings.Weapons.SPECIAL_WEAPON))
+    #if not Utils.is_texting() and not Utils.is_home_open():
+        press(KeyCode.from_char(KeyBindings.Weapons.SPECIAL_WEAPON))
+        press(KeyCode.from_char(KeyBindings.Weapons.HAND))
+        release(KeyCode.from_char(KeyBindings.Weapons.HAND))
+        release(KeyCode.from_char(KeyBindings.Weapons.SPECIAL_WEAPON))
     
 
 
@@ -201,8 +203,11 @@ def snack_on_car():
             ahk(KeyBindings.KeyBoard.ENTER)
             ahk(KeyBindings.KeyBoard.DOWN, 2)
             ahk(KeyBindings.KeyBoard.ENTER)
+            lAST_HEALTH=Utils.crt_health()
             while Utils.crt_health() < HEALTH_LIMLI and Utils.is_in_game():
                 ahk(KeyBindings.KeyBoard.ENTER)
+                if(lAST_HEALTH==Utils.crt_health()):
+                    break
             ahk(KeyBindings.KeyBoard.BACK)
             ahk(KeyBindings.KeyBoard.UP)
             ahk(KeyBindings.KeyBoard.ENTER)
