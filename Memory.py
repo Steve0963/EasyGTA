@@ -12,7 +12,7 @@ def get_process_id_by_name(process_name):
             return process.info['pid']
     return None
 ini.PID=get_process_id_by_name(ini.PROCESS_NAME)
-
+ini.ALL_PID=[get_process_id_by_name(name) for name in ini.ALL_GTA_PROCESS]
 def getBaseAddress():
     try:
         process_handle = OpenProcess(PROCESS_ALL_ACCESS,False,ini.PID)
@@ -38,7 +38,11 @@ def resume():
 
 def KillProcess():
     try:
-       Process(ini.PID).terminate()
+      
+       for pid in ini.ALL_PID:
+            print(pid)
+            Process(pid).terminate()
+
        print(f"process already killed")
     except Exception as ex:
             print(f"cant stop proess {ex}")
