@@ -3,7 +3,12 @@ import KeyBindings
 # 进程名 应用名
 GAME_NAME = "Grand Theft Auto V"
 PROCESS_NAME = "GTA5.exe"
-
+LAUNCHER="Launcher.exe"
+PLAY_GTA5="PlayGTAV.exe"
+ROCKSTAR_SERVICE="RockstarService.exe"
+ERROR_HANDLER="RockstarErrorHandler.exe"
+SC_HELPER="SocialClubHelper.exe"
+ALL_GTA_PROCESS=[PROCESS_NAME,LAUNCHER,PLAY_GTA5,ERROR_HANDLER,SC_HELPER]
 # 应用图标
 ICON_PATH = join(dirname(__file__), "icon.png")
 
@@ -18,5 +23,6 @@ FIRST_PERSON = 4
 THIRD_PERSON = 0
 
 PID = None
+ALL_PID=None
 IS_JUMP = False
 ICON=None
