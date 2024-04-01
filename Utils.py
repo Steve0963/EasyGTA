@@ -154,6 +154,7 @@ def auto_reload():  # 自动重启脚本
     while get_process_id_by_name(ini.PROCESS_NAME) == None:
         sleep(3)
     ini.PID = get_process_id_by_name(ini.PROCESS_NAME)
+    ini.ALL_PID= get_process_id_by_name(ini.ALL_GTA_PROCESS)
     sleep(10)
     while not is_online():
         sleep(3)
