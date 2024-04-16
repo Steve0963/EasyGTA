@@ -13,9 +13,9 @@ def get_process_id_by_name(process_name):
     return None
 ini.PID=get_process_id_by_name(ini.PROCESS_NAME)
 ini.ALL_PID=[get_process_id_by_name(name) for name in ini.ALL_GTA_PROCESS]
-def getBaseAddress():
+def getBaseAddress(pid=ini.PID):
     try:
-        process_handle = OpenProcess(PROCESS_ALL_ACCESS,False,ini.PID)
+        process_handle = OpenProcess(PROCESS_ALL_ACCESS,False,pid)
         base_address = EnumProcessModules(process_handle)[0]
         CloseHandle(process_handle)
         return base_address
@@ -40,9 +40,7 @@ def KillProcess():
     try:
       
        for pid in ini.ALL_PID:
-            print(pid)
             Process(pid).terminate()
-
        print(f"process already killed")
     except Exception as ex:
             print(f"cant stop proess {ex}")
@@ -85,3 +83,14 @@ def write_memory(address,type,data):
         return success != 0
     else:
         return False 
+GlobalPTR=GTA_ADDRESS+0x2EF59A0
+
+def GlobalAddress(index):
+        return read_memory(GlobalPTR + 0x8 * (index >> 0x12 & 0x3F),data_type=ctypes.c_uint64) + 8 * (index & 0x3FFFF)
+
+
+def reverse_calculate_index(result):
+    # 首先，计算 temp1 
+    for index in range(0,9000000):
+        if hex(GlobalAddress(index))==result:
+            return index
