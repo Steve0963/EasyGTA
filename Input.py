@@ -82,8 +82,7 @@ def on_press(key):
                 GF.snack_on_car()
 
             if key == KeyBindings.Function.SESSION:
-                #GF.drill()
-                pass
+                GF.change_session()
 
             if key == KeyBindings.Function.IDLE:
                 GF.idle()
@@ -108,8 +107,7 @@ def on_press(key):
                 GF.right_space()
 
             if key == KeyBindings.Function.KILL:
-                GF.kill_game()
-                auto_reload()
+                Thread(target= GF.kill_game).start()
 
     else:
         # print(key.vk)
