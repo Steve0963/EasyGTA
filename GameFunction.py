@@ -1,7 +1,7 @@
 from pynput.keyboard import KeyCode
 import Memory
 from time import sleep
-from Utils import ahk, press_and_release, press, release
+from Utils import ahk, auto_reload, press_and_release, press, release
 import Initial as ini
 import Utils
 import Offsets
@@ -21,6 +21,7 @@ def badsport_value():
 def kill_game():
     if not Utils.is_pause():
         Memory.KillProcess()
+        auto_reload()
 
 
 def idle():
@@ -52,6 +53,10 @@ def heal():
                 sleep(0.1)
                 Memory.write_memory(armo, "f", 50)
                 # press_and_release(KeyBindings.GameKeyBind.ARMO)
+                press(KeyCode.from_char(KeyBindings.Weapons.SPECIAL_WEAPON))
+                press(KeyCode.from_char(ini.CRT_WEAPON))
+                release(KeyCode.from_char(ini.CRT_WEAPON))
+                release(KeyCode.from_char(KeyBindings.Weapons.SPECIAL_WEAPON))
             release(KeyBindings.GameKeyBind.WEAPON_LIST)
        
 
@@ -283,3 +288,7 @@ def set_visual():
 
             else:
                 Memory.write_memory(addresses[0], "i", ini.FIRST_PERSON)
+def change_session():
+    Utils.change_session_type(ini.CLOSED_FRIEND)
+    Utils.change_session_state(ini.SESSION_STATE)
+    Utils.change_session_cache(ini.SESSION_CACHE)
