@@ -1,6 +1,6 @@
 from pygetwindow import getActiveWindow
 from pynput import keyboard, mouse
-from Memory import read_memory, address_by_offsets, get_process_id_by_name
+from Memory import read_memory, address_by_offsets, get_process_id_by_name,GlobalAddress,write_memory
 from ctypes import c_ulong, c_float, c_ubyte
 
 from time import sleep
@@ -107,7 +107,20 @@ def buy_ammo_times():
         return 3
     return 2
 
+def change_session_type(type):
+    
+    address=GlobalAddress(Offsets.Global.SESSION_TYPE)
+    write_memory(address,'i',type)
 
+def change_session_state(state):
+    
+    address=GlobalAddress(Offsets.Global.SESSION_STATE)
+    write_memory(address,'i',state)
+
+def change_session_cache(value):
+    
+    address=GlobalAddress(Offsets.Global.SESSION_CACHE)
+    write_memory(address,'i',value)
 
 def press_and_release(key):
     controller.press(key)
@@ -157,8 +170,8 @@ def auto_reload():  # 自动重启脚本
     ini.ALL_PID= get_process_id_by_name(ini.ALL_GTA_PROCESS)
     sleep(10)
     while not is_online():
-        sleep(3)
-    sleep(13)
+        sleep(1)
+    sleep(8.5)
     restart()
 
 
