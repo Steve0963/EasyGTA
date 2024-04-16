@@ -28,7 +28,7 @@ class Function:
     NECKLACE = Key.f4
     START_EGINE = Key.f5
     SNACKS = Key.f6
-    SESSION = Key.f7
+    SESSION = Key.f10
     IDLE = Key.f11
     SUSPEND = Key.end
     KILL = Key.delete
