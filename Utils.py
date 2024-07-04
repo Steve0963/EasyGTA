@@ -1,138 +1,241 @@
-from pygetwindow import getActiveWindow
-from pynput import keyboard, mouse
-from Memory import read_memory, address_by_offsets, get_process_id_by_name,GlobalAddress,write_memory
-from ctypes import c_ulong, c_float, c_ubyte
-
+from ctypes import c_float, c_ubyte, c_ulong
 from time import sleep
-from sys import argv, executable
-from os import execl
+from Config import GameParmas, Process, Listener,AppParmas
+from pygetwindow import getActiveWindow, getWindowsWithTitle
+from KeyBindings import GameKeyBindings
+from Listener import restart as listerner_restart
+from Memory import (
+    read,
+    write_GA,
+    write,
+    suspend_process,
+    kill_process,
+    resume_process,
+    pid_init,
+)
+from Address import Pointers, Basis, Menu, Index, Judge, Visual
+from pynput import keyboard, mouse
 
-import Offsets
-import Initial as ini
-
-controller = keyboard.Controller()
-mouse_controller = mouse.Controller()
+def init():
+    Listener.Keyboard_Controller = keyboard.Controller()
+    Listener.Mouse_Controller = mouse.Controller()
 
 
-def is_in_game():  # 是否在游戏内
+def origin(num):
+    return num - 48
+
+
+def is_in_game():
     if getActiveWindow() != None:
-        return ini.GAME_NAME in getActiveWindow().title
-
-
-def is_in_facility():  # 是否在设施
-    #Offsets = [0x200E130]
-    return read_memory(address_by_offsets(Offsets.IS_IN_FACLITY), c_ulong) == 1
-
-
-def is_online():  # 0-线上 #1-故事
-    return read_memory(address_by_offsets(Offsets.IS_ONLINE), c_float) == 125
-
-
-def is_in_car():  # 0-载具外 #1-载具内
-    return read_memory(address_by_offsets(Offsets.IS_IN_CAR), c_ubyte) != 0
+        return Process.Game_Name in getActiveWindow().title
 
 
 def is_first_person():
-    return read_memory(address_by_offsets(Offsets.IS_FIRST_PERSON), c_ulong) == 4
+    return (
+        read(Pointers.World_Ptr, Basis.Current_Visual, c_ubyte)
+        == GameParmas.First_Person
+    )
 
 
-def is_need_reload():
-    # print(read_memory(address_by_offsets(Offsets.CLIP_NUM),c_ulong))
-    return read_memory(address_by_offsets(Offsets.CLIP_NUM), c_ulong) == 0
+def is_in_facility():  # 是否在设施
+    return (
+        read(Pointers.Faclity_Ptr, Judge.Is_In_Faclity, c_ubyte)
+        == GameParmas.Status_True
+    )
 
 
-def is_pause():
-    return read_memory(address_by_offsets(Offsets.IS_PAUSE), c_ubyte) == 1
+def is_online():  # 0-线上 #1-故事
+    return read(Pointers.World_Ptr, Basis.Online, c_float) == GameParmas.Online
 
 
-def is_snakcs_none():
-    return ini.SNACKS == 0
+def is_in_car():  # 0-载具外 #1-载具内
+    return read(Pointers.World_Ptr, Basis.Is_In_Car, c_ubyte) == GameParmas.Status_True
 
 
 def is_texting():
-    return read_memory(address_by_offsets(Offsets.IS_TEXTING), c_ubyte) == 1
+    return (
+        read(Pointers.TextMenu_Ptr, Menu.Text_Menu, c_ubyte) == GameParmas.Status_True
+    )
 
 
 def is_home_open():
-    return read_memory(address_by_offsets(Offsets.IS_HOME_MENU), c_ubyte) == 1
-
-
-def is_look_back():
-    return read_memory(address_by_offsets(Offsets.IS_LOOK_BACK), c_ubyte) == 0
-
-
-def is_weaponlist_open():
-    return read_memory(address_by_offsets(Offsets.IS_WEAPONLIST_OPEN), c_ubyte) == 1
-
-def is_weaponwheel_open():
-    return read_memory(address_by_offsets(Offsets.IS_WEAPONWHEEL_OPEN), c_ubyte) == 1
-
-
-def is_space_down():
-    return read_memory(address_by_offsets(Offsets.IS_SPACE_DOWN), c_ubyte) == 0
+    return (
+        read(Pointers.HomeMenu_Ptr, Menu.Home_Menu, c_ubyte) == GameParmas.Status_True
+    )
 
 
 def is_character_select():
-    return read_memory(address_by_offsets(Offsets.IS_CHARACTER_SELECT), c_ubyte) == 1
+    return (
+        read(Pointers.Selector_Ptr, Menu.Character_Selector, c_ubyte)
+        == GameParmas.Status_True
+    )
+
+
+def is_need_reload():
+    return (
+        read(Pointers.World_Ptr, Basis.Current_Clip_Num, c_ulong)
+        == GameParmas.Status_False
+    )
+
+
+def is_pause():
+    return read(Pointers.PauseMenu_Ptr, Menu.P_Menu, c_ubyte) == GameParmas.Status_True
+
+
+def is_weaponlist_open():
+    return (
+        read(Pointers.WeaponMenu_Ptr, Menu.Weapon_Menu, c_ubyte)
+        == GameParmas.Status_True
+    )
+
+
+def is_look_back():
+    #print(read(Pointers.Lookback_Ptr, Judge.Look_Back, c_ubyte))
+    return (
+        read(Pointers.Lookback_Ptr, Judge.Look_Back, c_ubyte) == GameParmas.Status_True
+    )
+
+
 
 def is_menu_open():
-    return read_memory(address_by_offsets(Offsets.IS_MENU_OPEN), c_ubyte)!=255
+    return 1 != 255
+
 
 def is_self():
-    return read_memory(address_by_offsets(Offsets.IS_SELF), c_ubyte) == 156
+    return (
+        read(Pointers.World_Ptr, Basis.Entity_Type, c_ubyte) == GameParmas.Entity_Self
+    )
 
 
-def crt_health():  # 当前血量
-    return read_memory(address_by_offsets(Offsets.CURRENT_HEALTH), c_float)
+def suspend():
+    suspend_process()
+    # suspend_process(Process.ProcessPids.Process_Rockstar_Service)
+
+
+def resume():
+    # resume_process(Process.ProcessPids.Process_Rockstar_Service)
+    resume_process()
+
+
+def kill():
+    kill_process()
+
+
+def current_health():  # 当前血量
+    return read(Pointers.World_Ptr, Basis.Health, c_float)
 
 
 def health_limit():  # 血量上限
-    return read_memory(address_by_offsets(Offsets.HEALTH_LIMLI), c_float)
+    return read(Pointers.World_Ptr, Basis.Health_Max, c_float)
 
 
-def crt_weapon():
-    return read_memory(address_by_offsets(Offsets.CURRENT_WEAPON), c_ulong)
+def add_health():
+    write(Pointers.World_Ptr, Basis.Health, "f", current_health() + 15)
 
 
-def crt_weapon_ammo():
-    return read_memory(address_by_offsets(Offsets.CURRENT_WEAPON_AMMO), c_ulong)
+def add_armo():
+    write(Pointers.World_Ptr, Basis.Armor, "f", 50)
+
+
+def set_visual_in_car(person):
+    for visual in Visual.All_Visual[1:]:
+        write(Pointers.Visual_Ptr, visual, "i", person)
+
+
+def set_visual_out_car(person):
+    write(Pointers.Visual_Ptr, Visual.Visual_Out_Vehicle, "i", person)
+
+
+def current_weapon_type():
+    weapon = read(Pointers.WeaponType_Ptr, Judge.Weapon_Type, c_ubyte)
+    return GameParmas.Weapon_Mapping.get(weapon)
+
+def get_weapon_hash():
+    return read(Pointers.World_Ptr, Basis.Current_Weapon_Hash, c_ulong)
+
+def set_current_weapon(hash):
+    write(Pointers.World_Ptr, Basis.Current_Weapon_Hash,'i',hash)
+
+def current_weapon_ammo_num():
+    return read(Pointers.World_Ptr, Basis.Ammo_Num, c_ulong)
 
 
 def badsport():
-    return read_memory(address_by_offsets(Offsets.BADSPORT), c_float)
+    return read(Pointers.Global_Ptr, Basis.BadSport_Value, c_float)
 
 
 def buy_ammo_times():
-    if crt_weapon()==1:
+    if current_weapon_type() == GameKeyBindings.Weapons.Machine_gun:
         return 3
     return 2
+def joatt(statName):
+    hash = 0
+
+    for c in statName.lower():
+        hash += ord(c)
+        hash &= 0xFFFFFFFF
+        hash += (hash << 10) & 0xFFFFFFFF
+        hash &= 0xFFFFFFFF
+        hash ^= (hash >> 6) & 0xFFFFFFFF
+        hash &= 0xFFFFFFFF
+
+    hash += (hash << 3) & 0xFFFFFFFF
+    hash &= 0xFFFFFFFF
+    hash ^= (hash >> 11) & 0xFFFFFFFF
+    hash &= 0xFFFFFFFF
+    hash += (hash << 15) & 0xFFFFFFFF
+    hash &= 0xFFFFFFFF
+    return hash & 0xFFFFFFFF
 
 def change_session_type(type):
-    
-    address=GlobalAddress(Offsets.Global.SESSION_TYPE)
-    write_memory(address,'i',type)
+
+    write_GA(Index.Session_Type, "i", type)
+
 
 def change_session_state(state):
-    
-    address=GlobalAddress(Offsets.Global.SESSION_STATE)
-    write_memory(address,'i',state)
+    write_GA(Index.Session_State, "i", state)
+
 
 def change_session_cache(value):
-    
-    address=GlobalAddress(Offsets.Global.SESSION_CACHE)
-    write_memory(address,'i',value)
+    write_GA(Index.Session_Cache, "i", value)
 
+def end_custence():
+    write_GA(Index.Cutscene_Parma1,GameParmas.Status_True)
+    write_GA(Index.Cutscene_Parma2,GameParmas.Status_True)
+    sleep(1)
+    write_GA(Index.Cutscene_Parma1,GameParmas.Status_False)
+    write_GA(Index.Cutscene_Parma2,GameParmas.Status_False)
+
+
+
+'''
+def reverse_joatt(hash):
+
+    data = {"input": hash}
+
+    # 发送 POST 请求
+    response = post("https://joaat.sh/api/convert", data=data)
+
+    if response.status_code == 200:
+        json_data = response.json()
+        if "output" in json_data:
+            return json_data["output"]
+        elif "error" in json_data:
+            return f"Error: {json_data['error']}"
+    else:
+        return f"Error: {response.status_code}"
+'''
 def press_and_release(key):
-    controller.press(key)
-    controller.release(key)
+    Listener.Keyboard_Controller.press(key)
+    Listener.Keyboard_Controller.release(key)
 
 
 def press(key):
-    controller.press(key)
+    Listener.Keyboard_Controller.press(key)
 
 
 def release(key):
-    controller.release(key)
+    Listener.Keyboard_Controller.release(key)
 
 
 def ahk(key, times=1, delay=0.02):
@@ -140,39 +243,36 @@ def ahk(key, times=1, delay=0.02):
         press_and_release(key)
     sleep(delay)
 
-def mouse_position():
-    return  mouse_controller.position
-def move(x, y):
-    #mouse_controller.position=(x, y)
-    mouse_controller.move(x,y)
 
-def press_left():
-    mouse_controller.press(mouse.Button.left)
-def release_left():
-    mouse_controller.release(mouse.Button.left)
+def restart():
+    GameParmas.Health_Limit =health_limit()
+    listerner_restart()
 
-    
 
-def restart():  # 重启脚本
-    print(ini.ICON)
-    ini.ICON.stop()
-    python_executable = executable
-    execl(python_executable, python_executable, *argv)
-    
-def exit_click(icon):
-    icon.stop()
+def exit_click():
+    AppParmas.Icon.stop()
+    try:
+        Listener.Keyboard.stop()
+        Listener.Mouse.stop()
+    except Exception as e:
+        print("销毁Listener时发生异常:", e)
 
 def auto_reload():  # 自动重启脚本
     sleep(10)
-    while get_process_id_by_name(ini.PROCESS_NAME) == None:
+    while not getWindowsWithTitle(Process.Game_Name):
         sleep(3)
-    ini.PID = get_process_id_by_name(ini.PROCESS_NAME)
-    ini.ALL_PID= get_process_id_by_name(ini.ALL_GTA_PROCESS)
+    print('重新初始化内存')
+    pid_init()
+    restart()
     sleep(10)
+    print('开始等待上线')
     while not is_online():
         sleep(1)
-    sleep(8.5)
-    restart()
+    print('上线')
+    sleep(10)
+    GameParmas.Health_Limit =health_limit()
+    print('重启')
+    
 
 
 def block():
@@ -182,3 +282,6 @@ def block():
 
 def unblock():
     print("restore")
+
+
+
