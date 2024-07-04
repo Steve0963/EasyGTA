@@ -1,52 +1,56 @@
 from pynput.keyboard import Key
 
 
-class GameKeyBind:
-    HEALTH = "="
-    ARMO = "-"
-    LOOK_BACK = "c"
-    WEAPON_LIST = Key.insert
-    JUMP = Key.ctrl_r
-    CONTEXT = "e"
+class GameKeyBindings:
+
+    class Character:
+        Look_back = "c"
+        Jump = Key.ctrl_r
+        Context = "e"
+        Health = "="
+        Armo = "-"
+        Menu = "m"
+
+    class Weapons:
+        Weapon_list = Key.insert
+        Pistol = 6
+        Machine_gun = 8
+        Rifle = 5
+        Sniper = 7
+        Melee_weapon = 1
+        Hand = 9
+        Shot_gun = 2
+        Heavy_weapon = 4
+        Special_weapon = 3
+
+        Current_Weapon = Pistol
+
+
+class AppKeyBindings:
+    Buy_Ammo = Key.f3
+    Wear_Necklace = Key.f4
+    Start_Engine = Key.f5
+    Open_Snacks = Key.f6
+    Change_Session = Key.f10
+    Idle = Key.f11
+    Suspend = Key.end
+    Kill = Key.delete
+    Act3 = Key.page_down
+    Act1_Act2 = Key.page_up
+    Heal = Key.tab
+    Jump = Key.space
+    Instant_Stop = Key.alt_l
+    Reload_App = Key.f11
 
 
 class KeyBoard:
     V = 86
     C = 67
-    ESC = Key.esc
-    SPACE = Key.space
-    UP = Key.up
-    DOWN = Key.down
-    LEFT = Key.left
-    RIGHT = Key.right
-    ENTER = Key.enter
-    BACK=Key.backspace
-
-
-class Function:
-    AMMO = Key.f3
-    NECKLACE = Key.f4
-    START_EGINE = Key.f5
-    SNACKS = Key.f6
-    SESSION = Key.f10
-    IDLE = Key.f11
-    SUSPEND = Key.end
-    KILL = Key.delete
-    ACT3 = Key.page_down
-    ACT1_ACT2 = Key.page_up
-    HEAL = Key.tab
-    JUMP = Key.space
-    INSTANT_STOP = Key.alt_l
-    RELOAD=Key.f12
-
-
-class Weapons:
-    PISTO = 6
-    MACHINE_GUN = 8
-    RIFLE = 5
-    SNIPER = 7
-    MELEE_WEAPON = 1
-    HAND = 9
-    SHOT_GUN = 2
-    HEAVY_WEAPON = 4
-    SPECIAL_WEAPON = 3
+    Esc = Key.esc
+    Space = Key.space
+    Up = Key.up
+    Down = Key.down
+    Left = Key.left
+    Right = Key.right
+    Enter = Key.enter
+    Back = Key.backspace
