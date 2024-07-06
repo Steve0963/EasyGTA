@@ -113,6 +113,7 @@ def jump():
 
 def auto_esc():
     if Utils.is_in_car():
+        print("in car")
         sleep(0.2)
         if Utils.is_character_select():
             press_and_release(KeyBoard.Esc)
