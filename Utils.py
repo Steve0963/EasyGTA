@@ -31,13 +31,18 @@ def is_in_game():
 
 
 def is_first_person():
+    print('当前视角：'+str(read(Pointers.FirstPerson_Ptr, Basis.Current_Visual, c_ubyte)))
     return (
-        read(Pointers.World_Ptr, Basis.Current_Visual, c_ubyte)
+        read(Pointers.FirstPerson_Ptr, Basis.Current_Visual, c_ubyte)
         == GameParmas.First_Person
     )
 
 
-def is_in_facility():  # 是否在设施
+def is_in_facility(): 
+     # 是否在设施
+    print( read(Pointers.Faclity_Ptr, Judge.Is_In_Faclity, c_ubyte)
+        == GameParmas.Status_True)
+    print('fal')
     return (
         read(Pointers.Faclity_Ptr, Judge.Is_In_Faclity, c_ubyte)
         == GameParmas.Status_True
@@ -53,12 +58,16 @@ def is_in_car():  # 0-载具外 #1-载具内
 
 
 def is_texting():
+    print('texting')
+    print(read(Pointers.TextMenu_Ptr, Menu.Text_Menu, c_ubyte) == GameParmas.Status_True)
+    print('//////')
     return (
         read(Pointers.TextMenu_Ptr, Menu.Text_Menu, c_ubyte) == GameParmas.Status_True
     )
 
 
 def is_home_open():
+    print(read(Pointers.HomeMenu_Ptr, Menu.Home_Menu, c_ubyte) == GameParmas.Status_True)
     return (
         read(Pointers.HomeMenu_Ptr, Menu.Home_Menu, c_ubyte) == GameParmas.Status_True
     )
@@ -72,8 +81,9 @@ def is_character_select():
 
 
 def is_need_reload():
+    # print(read(Pointers.Attribute_Ptr, Basis.Current_Clip_Num, c_ulong))
     return (
-        read(Pointers.World_Ptr, Basis.Current_Clip_Num, c_ulong)
+        read(Pointers.Attribute_Ptr, Basis.Current_Clip_Num, c_ulong)
         == GameParmas.Status_False
     )
 
@@ -83,14 +93,16 @@ def is_pause():
 
 
 def is_weaponlist_open():
+    # print(read(Pointers.Attribute_Ptr, Menu.Weapon_Menu, c_ubyte)
+    #     == GameParmas.Status_True)
     return (
-        read(Pointers.WeaponMenu_Ptr, Menu.Weapon_Menu, c_ubyte)
+        read(Pointers.WeaponType_Ptr, Menu.Weapon_Menu, c_ubyte)
         == GameParmas.Status_True
     )
 
 
 def is_look_back():
-    #print(read(Pointers.Lookback_Ptr, Judge.Look_Back, c_ubyte))
+    print(read(Pointers.Lookback_Ptr, Judge.Look_Back, c_ubyte))
     return (
         read(Pointers.Lookback_Ptr, Judge.Look_Back, c_ubyte) == GameParmas.Status_True
     )
