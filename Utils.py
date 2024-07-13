@@ -1,7 +1,7 @@
 from ctypes import c_float, c_ubyte, c_ulong
 from time import sleep
 from Config import GameParmas, Process, Listener,AppParmas
-from pygetwindow import getActiveWindow, getWindowsWithTitle
+from pygetwindow import getActiveWindow, getAllTitles
 from KeyBindings import GameKeyBindings
 from Listener import restart as listerner_restart
 from Memory import (
@@ -31,7 +31,7 @@ def is_in_game():
 
 
 def is_first_person():
-    print('当前视角：'+str(read(Pointers.FirstPerson_Ptr, Basis.Current_Visual, c_ubyte)))
+    # print('当前视角：'+str(read(Pointers.FirstPerson_Ptr, Basis.Current_Visual, c_ubyte)))
     return (
         read(Pointers.FirstPerson_Ptr, Basis.Current_Visual, c_ubyte)
         == GameParmas.First_Person
@@ -102,7 +102,7 @@ def is_weaponlist_open():
 
 
 def is_look_back():
-    print(read(Pointers.Lookback_Ptr, Judge.Look_Back, c_ubyte))
+    # print(read(Pointers.Lookback_Ptr, Judge.Look_Back, c_ubyte))
     return (
         read(Pointers.Lookback_Ptr, Judge.Look_Back, c_ubyte) == GameParmas.Status_True
     )
@@ -270,9 +270,13 @@ def exit_click():
         print("销毁Listener时发生异常:", e)
 
 def auto_reload():  # 自动重启脚本
+    print('等待十秒')
     sleep(10)
-    while not getWindowsWithTitle(Process.Game_Name):
+    print('等待完毕')
+    # print(Process.Game_Name in getAllTitles())
+    while not Process.Game_Name in getAllTitles():
         sleep(3)
+        print('准备重启中....')
     print('重新初始化内存')
     pid_init()
     restart()
